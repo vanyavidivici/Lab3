@@ -20,6 +20,19 @@ contract FundraisingContract {
         mapping(string => uint256) contributions;
     }
 
+    struct Contribution {
+        string username;
+        uint256 sum;
+    }
+
+    // Define a struct for ProjectReport
+    struct ProjectReport {
+        string name;
+        uint256 goalAmount;
+        uint256 receivedAmount;
+        uint256 deadline;
+    }
+
     mapping(string => User) private users;
     mapping(uint256 => Project) private projects;
 
@@ -161,16 +174,20 @@ contract FundraisingContract {
     }
 
     // Get project contributors
-    function getContributors(uint256 projectId) public view returns (string[] memory, uint256[] memory) {
+    // Modify getContributors function
+    function getContributors(uint256 projectId) public view returns (Contribution[] memory) {
         Project storage project = projects[projectId];
         uint256 contributorCount = project.contributors.length;
-        uint256[] memory contributions = new uint256[](contributorCount);
+        Contribution[] memory contributions = new Contribution[](contributorCount);
 
         for (uint256 i = 0; i < contributorCount; i++) {
-            contributions[i] = project.contributions[project.contributors[i]];
+            contributions[i] = Contribution({
+                username: project.contributors[i],
+                sum: project.contributions[project.contributors[i]]
+            });
         }
 
-        return (project.contributors, contributions);
+        return contributions;
     }
 
     // Check project status
@@ -178,11 +195,11 @@ contract FundraisingContract {
         return projects[projectId].isOpen;
     }
 
-    function getProjectReport() public view returns (string[] memory successfulProjects, uint256[] memory successfulAmounts, string[] memory failedProjects, uint256[] memory failedAmounts) {
+    function getProjectReport() public view returns (ProjectReport[] memory successfulProjects, ProjectReport[] memory failedProjects) {
         uint256 successfulCount = 0;
         uint256 failedCount = 0;
 
-        // Підраховуємо кількість успішних та неуспішних проектів
+        // Count the number of successful and failed projects
         for (uint256 i = 1; i <= projectCount; i++) {
             Project storage project = projects[i];
             if (project.currentAmount >= project.goalAmount) {
@@ -192,25 +209,31 @@ contract FundraisingContract {
             }
         }
 
-        // Створюємо масиви для успішних та неуспішних проектів
-        successfulProjects = new string[](successfulCount);
-        successfulAmounts = new uint256[](successfulCount);
-        failedProjects = new string[](failedCount);
-        failedAmounts = new uint256[](failedCount);
+        // Create arrays for successful and failed projects
+        successfulProjects = new ProjectReport[](successfulCount);
+        failedProjects = new ProjectReport[](failedCount);
 
         uint256 successfulIndex = 0;
         uint256 failedIndex = 0;
 
-        // Заповнюємо масиви відповідно до статусу проектів
+        // Fill the arrays with project data
         for (uint256 i = 1; i <= projectCount; i++) {
             Project storage project = projects[i];
             if (project.currentAmount >= project.goalAmount) {
-                successfulProjects[successfulIndex] = project.name;
-                successfulAmounts[successfulIndex] = project.currentAmount;
+                successfulProjects[successfulIndex] = ProjectReport({
+                    name: project.name,
+                    goalAmount: project.goalAmount,
+                    receivedAmount: project.currentAmount,
+                    deadline: project.deadline
+                });
                 successfulIndex++;
             } else {
-                failedProjects[failedIndex] = project.name;
-                failedAmounts[failedIndex] = project.currentAmount;
+                failedProjects[failedIndex] = ProjectReport({
+                    name: project.name,
+                    goalAmount: project.goalAmount,
+                    receivedAmount: project.currentAmount,
+                    deadline: project.deadline
+                });
                 failedIndex++;
             }
         }
