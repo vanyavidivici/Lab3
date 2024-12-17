@@ -19,7 +19,7 @@ router.post("/register", async (req: Request, res: Response) => {
     res.send(result);
 });
 
-router.get("/logout", authUser, async (req: Request, res: Response) => {
+router.post("/logout", authUser, async (req: Request, res: Response) => {
     try {
         const username = getUserName(req);
         await logout(username);

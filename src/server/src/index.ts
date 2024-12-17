@@ -2,8 +2,8 @@ import express, { Express, NextFunction, Request, Response } from "express";
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
 import auth from "./routers/auth.routes";
-// import image from "./api/image.routes";
-// import exchange from "./api/exchange.routes";
+import fundraising from "./routers/fundraising.routes";
+import report from "./routers/report.routes";
 import cors from "cors";
 import { buildClient } from "./contracts/fundraising/fundraising";
 import fileUpload from 'express-fileupload';
@@ -38,8 +38,8 @@ app.get("/", (req: Request, res: Response) => {
 
 
 app.use("/auth", auth);
-// app.use("/images", image);
-// app.use("/exchange", exchange);
+app.use("/fundraising", fundraising);
+app.use("/report", report);
 
 
 app.listen(port, () => {

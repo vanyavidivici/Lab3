@@ -195,7 +195,40 @@ contract FundraisingContract {
         return projects[projectId].isOpen;
     }
 
-    function getProjectReport() public view returns (ProjectReport[] memory successfulProjects, ProjectReport[] memory failedProjects) {
+    //generate function that returns array of ProjectReport objects that are open for contribution
+    function getOpenProjects() public view returns (ProjectReport[] memory) {
+        uint256 openProjectCount = 0;
+
+        // Count the number of open projects
+        for (uint256 i = 1; i <= projectCount; i++) {
+            if (projects[i].isOpen) {
+                openProjectCount++;
+            }
+        }
+
+        // Create an array for open projects
+        ProjectReport[] memory openProjects = new ProjectReport[](openProjectCount);
+
+        uint256 openProjectIndex = 0;
+
+        // Fill the array with project data
+        for (uint256 i = 1; i <= projectCount; i++) {
+            Project storage project = projects[i];
+            if (project.isOpen) {
+                openProjects[openProjectIndex] = ProjectReport({
+                    name: project.name,
+                    goalAmount: project.goalAmount,
+                    receivedAmount: project.currentAmount,
+                    deadline: project.deadline
+                });
+                openProjectIndex++;
+            }
+        }
+
+        return openProjects;
+    }
+
+    function getProjectsReport() public view returns (ProjectReport[] memory successfulProjects, ProjectReport[] memory failedProjects) {
         uint256 successfulCount = 0;
         uint256 failedCount = 0;
 

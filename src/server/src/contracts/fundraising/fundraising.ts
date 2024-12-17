@@ -1,5 +1,5 @@
-import { Contribution } from "../../models/contribution.model";
-import { ProjectReportResult } from "../../models/projects-report.model";
+import { Contribution } from "../../models/response/contribution-response.model";
+import { ProjectReport, ProjectReportResult } from "../../models/response/projects-report-response.model";
 
 const Web3Lib = require('web3');
 const { abi, bytecode } = require('./../../../../smart-contract/scripts/compile.js');
@@ -137,9 +137,25 @@ export async function isProjectOpen(projectId: number): Promise<boolean> {
     }
 }
 
-export async function getProjectReport(): Promise<ProjectReportResult> {
+//generate function for getting all open projects from function getOpenProjects
+export async function getOpenProjects(): Promise<ProjectReport[]> {
     try {
-        const result = await contract.methods.getProjectReport().call();
+        const result = await contract.methods.getOpenProjects().call();
+        return result.map((project: { name: string, goalAmount: string, receivedAmount: string, deadline: string }) => ({
+            name: project.name,
+            goalAmount: parseFloat(project.goalAmount),
+            receivedAmount: parseFloat(project.receivedAmount),
+            deadline: parseInt(project.deadline)
+        }));
+    } catch (error) {
+        console.error(error);
+        return [];
+    }
+}
+
+export async function getProjectsReport(): Promise<ProjectReportResult> {
+    try {
+        const result = await contract.methods.getProjectsReport().call();
         return {
             successfulProjects: result[0].map((project: { name: string, goalAmount: string, receivedAmount: string, deadline: string }) => ({
                 name: project.name,

@@ -1,4 +1,4 @@
-interface ProjectReport {
+export interface ProjectReport {
     name: string;
     goalAmount: number;
     receivedAmount: number;
