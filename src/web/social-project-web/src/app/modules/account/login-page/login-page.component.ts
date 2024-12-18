@@ -4,11 +4,24 @@ import { ToastrService } from 'ngx-toastr';
 import { AuthModel, AuthResponseModel } from '../../../core/models/auth.model';
 import { BaseResponseModel } from '../../../core/models/base-response';
 import { AccountService } from '../../../core/services/account.service';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-login-page',
   templateUrl: './login-page.component.html',
-  styleUrls: ['./login-page.component.scss']
+  styleUrls: ['./login-page.component.scss'],
+  standalone: true,
+  imports: [
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    ReactiveFormsModule
+  ]
 })
 export class LoginPageComponent implements OnInit {
 
