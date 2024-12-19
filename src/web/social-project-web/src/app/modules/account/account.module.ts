@@ -10,7 +10,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatNativeDateModule, MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
-import { HttpClientModule } from '@angular/common/http';
 import { LoginPageComponent } from './login-page/login-page.component';
 
 @NgModule({
@@ -26,7 +25,6 @@ import { LoginPageComponent } from './login-page/login-page.component';
     MatOptionModule,
     MatSelectModule,
     MatTableModule,
-    HttpClientModule,
     LoginPageComponent // Import the standalone component here
   ],
   exports: [

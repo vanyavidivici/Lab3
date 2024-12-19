@@ -4,7 +4,7 @@ import { environment } from '../../../environments/environment';
 
 import { Observable } from 'rxjs';
 import { BaseResponseModel } from '../models/base-response';
-import { AuthModel, AuthResponseModel } from '../models/auth.model';
+import { AuthModel, AuthResponseModel } from '../models/request/auth.model';
 
 
 @Injectable({

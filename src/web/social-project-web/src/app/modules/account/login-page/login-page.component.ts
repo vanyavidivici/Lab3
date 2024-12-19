@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { AuthModel, AuthResponseModel } from '../../../core/models/auth.model';
+import { AuthModel, AuthResponseModel } from '../../../core/models/request/auth.model';
 import { BaseResponseModel } from '../../../core/models/base-response';
 import { AccountService } from '../../../core/services/account.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
