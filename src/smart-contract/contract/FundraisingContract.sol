@@ -33,6 +33,7 @@ contract FundraisingContract {
         uint256 deadline;
     }
 
+    mapping(string => address) private userAddresses;
     mapping(string => User) private users;
     mapping(uint256 => Project) private projects;
 
@@ -65,6 +66,7 @@ contract FundraisingContract {
 
     // User registration
     function registerUser(string memory _login, string memory _password) public {
+        require(userAddresses[_login] == address(0), "Username already taken.");
         require(bytes(_login).length > 0, "Login cannot be empty.");
         require(users[_login].passwordHash == 0, "User already exists.");
 
@@ -74,6 +76,8 @@ contract FundraisingContract {
             userAddress: msg.sender,  // Store the user's address
             isLoggedIn: false
         });
+
+        userAddresses[_login] = msg.sender;
     }
 
 
@@ -92,13 +96,44 @@ contract FundraisingContract {
         user.isLoggedIn = false;
     }
 
+    function getUserAddress(string memory _login) public view returns (address) {
+        return userAddresses[_login];
+    }
+
+    // Getter for users
+    function getUser(string memory _login) public view returns (User memory) {
+        return users[_login];
+    }
+
+    // Getter for projects
+    function getProject(uint256 projectId) public view returns (
+        string memory name,
+        address owner,
+        uint256 goalAmount,
+        uint256 currentAmount,
+        uint256 deadline,
+        bool isOpen,
+        string[] memory contributors
+    ) {
+        Project storage project = projects[projectId];
+        return (
+            project.name,
+            project.owner,
+            project.goalAmount,
+            project.currentAmount,
+            project.deadline,
+            project.isOpen,
+            project.contributors
+        );
+    }
+
     // Create a new project
     function createProject(
         string memory name,
         uint256 goalAmount,
         uint256 durationInDays,
         string memory _login
-    ) public onlyLoggedIn(_login) {
+    ) public onlyLoggedIn(_login) returns (uint256) {
         require(bytes(name).length > 0, "Project name cannot be empty.");
         require(goalAmount > 0, "Goal amount must be greater than zero.");
         require(durationInDays > 0, "Duration must be greater than zero.");
@@ -111,6 +146,8 @@ contract FundraisingContract {
         newProject.currentAmount = 0;
         newProject.deadline = block.timestamp + (durationInDays * 1 days);
         newProject.isOpen = true;
+
+        return projectCount;
     }
 
     // Contribute to a project
@@ -130,6 +167,13 @@ contract FundraisingContract {
         if (project.currentAmount >= project.goalAmount) {
             project.isOpen = false;
         }
+    }
+
+    // modify this function to get user balance by username
+    function getUserBalance(string memory username) public view returns (uint256) {
+        address user = userAddresses[username];
+        require(user != address(0), "User does not exist.");
+        return user.balance;
     }
 
     // Refund all contributors

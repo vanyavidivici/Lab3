@@ -5,7 +5,7 @@ const Web3Lib = require('web3');
 const { abi, bytecode } = require('./../../../../smart-contract/scripts/compile.js');
 
 let accounts;
-let userImageStore;
+let fundraisingContract;
 let contract: any;
 
 const web3 = new Web3Lib.Web3('http://127.0.0.1:8545');
@@ -14,14 +14,14 @@ let fromAddress: string;
 
 export async function buildClient() {
     await deployContract();
-    const contractAddress = userImageStore!.options.address;
+    const contractAddress = fundraisingContract!.options.address;
     contract = new web3.eth.Contract(abi, contractAddress);
     fromAddress = accounts![0];
 }
 
 async function deployContract() {
     accounts = await web3.eth.getAccounts();
-    userImageStore = await new web3.eth.Contract(abi)
+    fundraisingContract = await new web3.eth.Contract(abi)
         .deploy({ data: bytecode })
         .send({ from: accounts[0], gas: 30000000 });
 }
@@ -64,13 +64,13 @@ export async function logoutUser(login: string): Promise<void> {
 
 //#region fundraising
 
-export async function createProject(name: string, goalAmount: number, durationInDays: number, login: string): Promise<boolean> {
+export async function createProject(name: string, goalAmount: number, durationInDays: number, login: string): Promise<number> {
     try {
-        await contract.methods.createProject(name, goalAmount, durationInDays, login).send({ from: fromAddress });
-        return true;
+        const projectId = await contract.methods.createProject(name, goalAmount, durationInDays, login).send({ from: fromAddress });
+        return projectId;
     } catch (error) {
         console.error(error);
-        return false;
+        return 0;
     }
 }
 
@@ -81,6 +81,16 @@ export async function contributeToProject(projectId: number, login: string, amou
     } catch (error) {
         console.error(error);
         return false;
+    }
+}
+
+export async function getBalance(username: string): Promise<number> {
+    try {
+        const balance = await contract.methods.getUserBalance(username).send({ from: fromAddress });
+        return parseFloat(balance);
+    } catch (error) {
+        console.error(error);
+        return 0;
     }
 }
 

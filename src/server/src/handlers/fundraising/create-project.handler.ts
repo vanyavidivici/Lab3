@@ -1,7 +1,7 @@
 import { CreateProjectRequest } from "../../models/request/create-project-request.model";
 import { createProject } from "../../contracts/fundraising/fundraising";
 
-export async function createProjectHandle(model: CreateProjectRequest, userName: string): Promise<boolean> {
+export async function createProjectHandle(model: CreateProjectRequest, userName: string): Promise<number> {
     // in model request i get the date. calculate please the days difference between current date and the date from the model
     // and pass it to the createProject function
     try {
@@ -13,6 +13,6 @@ export async function createProjectHandle(model: CreateProjectRequest, userName:
     }
     catch (error) {
         console.error(error);
-        return false;
+        return 0;
     }
 }

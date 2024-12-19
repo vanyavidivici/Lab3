@@ -8,6 +8,7 @@ import { getContributorsHandler } from '../handlers/fundraising/get-contributors
 import { getContributionHandler } from '../handlers/fundraising/get-contribution.handler';
 import { isProjectOpenHandler } from '../handlers/fundraising/is-project-open.handler';
 import { getOpenProjectsHandler } from '../handlers/fundraising/get-open-projects.handler';
+import { getBalanceHandler } from '../handlers/fundraising/get-balance.handler';
 
 const router = express.Router();
 
@@ -21,6 +22,12 @@ router.post('/contribute', authUser, async (req, res) => {
     const userName = getUserName(req);
     const result = await contributeHandle(req.body, userName);
     res.status(result ? 200 : 500).send(result ? "Contribution successful" : "Failed to contribute");
+});
+
+router.post('/balance', authUser, async (req, res) => {
+    const userName = getUserName(req);
+    const result = await getBalanceHandler(userName);
+    res.status(result ? 200 : 500).json(result);
 });
 
 router.post('/refund', authUser, async (req, res) => {
