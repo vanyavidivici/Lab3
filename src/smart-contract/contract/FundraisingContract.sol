@@ -21,6 +21,14 @@ contract FundraisingContract {
         mapping(string => uint256) contributions;
     }
 
+    struct ProjectInfo {
+        string name;
+        string description;
+        uint256 goalAmount;
+        uint256 deadline;
+        bool isOpen;
+    }
+
     struct Contribution {
         string username;
         uint256 sum;
@@ -137,6 +145,17 @@ contract FundraisingContract {
             project.isOpen,
             project.contributors
         );
+    }
+
+    function getProjectReport(uint256 projectId) public view returns (ProjectInfo memory) {
+        Project storage project = projects[projectId];
+        return ProjectInfo({
+            name: project.name,
+            description: project.description,
+            goalAmount: project.goalAmount,
+            deadline: project.deadline,
+            isOpen: project.isOpen
+        });
     }
 
     function changeProject(

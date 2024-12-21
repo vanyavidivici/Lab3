@@ -1,4 +1,5 @@
 import { Contribution } from "../../models/response/contribution-response.model";
+import { Project } from "../../models/response/project-response.model";
 import { ProjectReport, ProjectReportResult } from "../../models/response/projects-report-response.model";
 
 const Web3Lib = require('web3');
@@ -71,6 +72,22 @@ export async function createProject(name: string, description: string, goalAmoun
     } catch (error) {
         console.error(error);
         return 0;
+    }
+}
+
+export async function getProject(projectId: number): Promise<Project> {
+    try {
+        const result = await contract.methods.getProjectReport(projectId).call();
+        return {
+            name: result.name,
+            description: result.description,
+            goalAmount: parseFloat(result.goalAmount),
+            deadline: parseInt(result.deadline),
+            isOpen: result.isOpen
+        };
+    } catch (error) {
+        console.error(error);
+        throw new Error('Failed to get project');
     }
 }
 

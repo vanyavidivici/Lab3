@@ -8,10 +8,6 @@ import { EditProjectComponent } from './edit-project/edit-project.component';
 import { MyProjectsPageComponent } from './my-projects-page/my-projects-page.component';
 import { ProjectDetailsComponent } from './project-details/project-details.component';
 import { ReportPageComponent } from './report-page/report-page.component';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatListModule } from '@angular/material/list';
-import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -34,11 +30,6 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
     FundraisingRoutingModule,
     ReactiveFormsModule,
     MatCardModule,
-    MatToolbarModule,
-    MatSidenavModule,
-    MatListModule,
-    MatIconModule,
-    MatButtonModule,
     RouterModule,
     MatFormFieldModule,
     MatInputModule,

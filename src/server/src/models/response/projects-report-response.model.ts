@@ -4,6 +4,7 @@ export interface ProjectReport {
     goalAmount: number;
     receivedAmount: number;
     deadline: number;
+    isOpen: boolean;
 }
 
 export interface ProjectReportResult {

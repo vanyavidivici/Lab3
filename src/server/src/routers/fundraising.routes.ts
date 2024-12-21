@@ -11,6 +11,7 @@ import { getOpenProjectsHandler } from '../handlers/fundraising/get-open-project
 import { getBalanceHandler } from '../handlers/fundraising/get-balance.handler';
 import { changeProjectHandler } from '../handlers/fundraising/change-project.handler';
 import { deleteProjectHandler } from '../handlers/fundraising/delete-project.handler';
+import { getProjectHandler } from '../handlers/fundraising/get-project.handler';
 
 const router = express.Router();
 
@@ -18,6 +19,11 @@ router.post('/create-project', authUser, async (req, res) => {
     const userName = getUserName(req);
     const result = await createProjectHandler(req.body, userName);
     res.status(result ? 200 : 500).send(result ? "Project created successfully" : "Failed to create project");
+});
+
+router.get('/get-project/:projectId', authUser, async (req, res) => {
+    const result = await getProjectHandler(parseInt(req.params.projectId));
+    res.status(result ? 200 : 500).json(result);
 });
 
 router.post('/change-project', authUser, async (req, res) => {
