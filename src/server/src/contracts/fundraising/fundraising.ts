@@ -64,13 +64,33 @@ export async function logoutUser(login: string): Promise<void> {
 
 //#region fundraising
 
-export async function createProject(name: string, goalAmount: number, durationInDays: number, login: string): Promise<number> {
+export async function createProject(name: string, description: string, goalAmount: number, durationInDays: number, login: string): Promise<number> {
     try {
-        const projectId = await contract.methods.createProject(name, goalAmount, durationInDays, login).send({ from: fromAddress });
+        const projectId = await contract.methods.createProject(name, description, goalAmount, durationInDays, login).send({ from: fromAddress });
         return projectId;
     } catch (error) {
         console.error(error);
         return 0;
+    }
+}
+
+export async function changeProject(projectId: number, name: string, description: string, goalAmount: number, durationInDays: number, isOpen: boolean, login: string): Promise<boolean> {
+    try {
+        const result = await contract.methods.changeProject(projectId, name, description, goalAmount, durationInDays, isOpen, login).send({ from: fromAddress });
+        return result;
+    } catch (error) {
+        console.error(error);
+        return false;
+    }
+}
+
+export async function deleteProject(projectId: number, login: string): Promise<boolean> {
+    try {
+        const result = await contract.methods.deleteProject(projectId, login).send({ from: fromAddress });
+        return result;
+    } catch (error) {
+        console.error(error);
+        return false;
     }
 }
 
@@ -147,7 +167,6 @@ export async function isProjectOpen(projectId: number): Promise<boolean> {
     }
 }
 
-//generate function for getting all open projects from function getOpenProjects
 export async function getOpenProjects(): Promise<ProjectReport[]> {
     try {
         const result = await contract.methods.getOpenProjects().call();
@@ -167,14 +186,16 @@ export async function getProjectsReport(): Promise<ProjectReportResult> {
     try {
         const result = await contract.methods.getProjectsReport().call();
         return {
-            successfulProjects: result[0].map((project: { name: string, goalAmount: string, receivedAmount: string, deadline: string }) => ({
+            successfulProjects: result[0].map((project: { name: string, description: string, goalAmount: string, receivedAmount: string, deadline: string }) => ({
                 name: project.name,
+                description: project.description,
                 goalAmount: parseFloat(project.goalAmount),
                 receivedAmount: parseFloat(project.receivedAmount),
                 deadline: parseInt(project.deadline)
             })),
-            failedProjects: result[1].map((project: { name: string, goalAmount: string, receivedAmount: string, deadline: string }) => ({
+            failedProjects: result[1].map((project: { name: string, description: string, goalAmount: string, receivedAmount: string, deadline: string }) => ({
                 name: project.name,
+                description: project.description,
                 goalAmount: parseFloat(project.goalAmount),
                 receivedAmount: parseFloat(project.receivedAmount),
                 deadline: parseInt(project.deadline)

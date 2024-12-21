@@ -1,14 +1,12 @@
 import { CreateProjectRequest } from "../../models/request/create-project-request.model";
 import { createProject } from "../../contracts/fundraising/fundraising";
 
-export async function createProjectHandle(model: CreateProjectRequest, userName: string): Promise<number> {
-    // in model request i get the date. calculate please the days difference between current date and the date from the model
-    // and pass it to the createProject function
+export async function createProjectHandler(model: CreateProjectRequest, userName: string): Promise<number> {
     try {
         const currentDate = new Date();
-        const deadlineDate = new Date(model.deadline); // Ensure deadline is a Date object
+        const deadlineDate = new Date(model.deadline);
         const daysDifference = Math.floor((deadlineDate.getTime() - currentDate.getTime()) / (1000 * 3600 * 24));
-        const contractResult = await createProject(model.name, daysDifference, model.targetAmount, userName);
+        const contractResult = await createProject(model.name, model.description, daysDifference, model.targetAmount, userName);
         return contractResult;
     }
     catch (error) {

@@ -46,7 +46,7 @@ describe('FundraisingContract', function () {
     });
 
     it('should create a project', async () => {
-        await fundraisingContract.methods.createProject("Project1", 10, 5, "testUser1").send({ from: accounts[0] });
+        await fundraisingContract.methods.createProject("Project1", "Description1", 10, 5, "testUser1").send({ from: accounts[0] });
         const project = await fundraisingContract.methods.getProject(1).call();
 
         expect(project.name).to.equal("Project1");

@@ -5,12 +5,13 @@ contract FundraisingContract {
     struct User {
         bytes32 passwordHash;
         string login;
-        address userAddress; // Add the address field
+        address userAddress;
         bool isLoggedIn;
     }
 
     struct Project {
         string name;
+        string description;
         address payable owner;
         uint256 goalAmount;
         uint256 currentAmount;
@@ -25,9 +26,9 @@ contract FundraisingContract {
         uint256 sum;
     }
 
-    // Define a struct for ProjectReport
     struct ProjectReport {
         string name;
+        string description;
         uint256 goalAmount;
         uint256 receivedAmount;
         uint256 deadline;
@@ -51,11 +52,9 @@ contract FundraisingContract {
     }
 
     modifier onlyLoggedIn(string memory _login) {
-        // Перевірка чи змінилась адреса користувача
         if (users[_login].userAddress != msg.sender) {
-            users[_login].isLoggedIn = false; // Вимикаємо логін, якщо адреса змінилась
+            users[_login].isLoggedIn = false;
         }
-
         require(users[_login].isLoggedIn, "User must be logged in to perform this action.");
         _;
     }
@@ -64,7 +63,6 @@ contract FundraisingContract {
         contractOwner = msg.sender;
     }
 
-    // User registration
     function registerUser(string memory _login, string memory _password) public {
         require(userAddresses[_login] == address(0), "Username already taken.");
         require(bytes(_login).length > 0, "Login cannot be empty.");
@@ -73,15 +71,13 @@ contract FundraisingContract {
         users[_login] = User({
             login: _login,
             passwordHash: keccak256(abi.encodePacked(_password)),
-            userAddress: msg.sender,  // Store the user's address
+            userAddress: msg.sender,
             isLoggedIn: false
         });
 
         userAddresses[_login] = msg.sender;
     }
 
-
-    // User login
     function loginUser(string memory _login, string memory _password) public {
         User storage user = users[_login];
         require(user.passwordHash != 0, "User does not exist.");
@@ -90,24 +86,39 @@ contract FundraisingContract {
         user.isLoggedIn = true;
     }
 
-    // User logout
     function logoutUser(string memory _login) public onlyLoggedIn(_login) {
         User storage user = users[_login];
         user.isLoggedIn = false;
     }
 
-    function getUserAddress(string memory _login) public view returns (address) {
-        return userAddresses[_login];
+    function createProject(
+        string memory name,
+        string memory description,
+        uint256 goalAmount,
+        uint256 durationInDays,
+        string memory _login
+    ) public onlyLoggedIn(_login) returns (uint256) {
+        require(bytes(name).length > 0, "Project name cannot be empty.");
+        require(bytes(description).length > 0, "Project description cannot be empty.");
+        require(goalAmount > 0, "Goal amount must be greater than zero.");
+        require(durationInDays > 0, "Duration must be greater than zero.");
+
+        projectCount++;
+        Project storage newProject = projects[projectCount];
+        newProject.name = name;
+        newProject.description = description;
+        newProject.owner = payable(msg.sender);
+        newProject.goalAmount = goalAmount * 1 ether;
+        newProject.currentAmount = 0;
+        newProject.deadline = block.timestamp + (durationInDays * 1 days);
+        newProject.isOpen = true;
+
+        return projectCount;
     }
 
-    // Getter for users
-    function getUser(string memory _login) public view returns (User memory) {
-        return users[_login];
-    }
-
-    // Getter for projects
     function getProject(uint256 projectId) public view returns (
         string memory name,
+        string memory description,
         address owner,
         uint256 goalAmount,
         uint256 currentAmount,
@@ -118,6 +129,7 @@ contract FundraisingContract {
         Project storage project = projects[projectId];
         return (
             project.name,
+            project.description,
             project.owner,
             project.goalAmount,
             project.currentAmount,
@@ -127,30 +139,27 @@ contract FundraisingContract {
         );
     }
 
-    // Create a new project
-    function createProject(
+    function changeProject(
+        uint256 projectId,
         string memory name,
+        string memory description,
         uint256 goalAmount,
-        uint256 durationInDays,
+        uint256 deadline,
+        bool isOpen, 
         string memory _login
-    ) public onlyLoggedIn(_login) returns (uint256) {
-        require(bytes(name).length > 0, "Project name cannot be empty.");
-        require(goalAmount > 0, "Goal amount must be greater than zero.");
-        require(durationInDays > 0, "Duration must be greater than zero.");
-
-        projectCount++;
-        Project storage newProject = projects[projectCount];
-        newProject.name = name;
-        newProject.owner = payable(msg.sender);
-        newProject.goalAmount = goalAmount * 1 ether;
-        newProject.currentAmount = 0;
-        newProject.deadline = block.timestamp + (durationInDays * 1 days);
-        newProject.isOpen = true;
-
-        return projectCount;
+        ) public onlyLoggedIn(_login) onlyProjectOwner(projectId) {
+        Project storage project = projects[projectId];
+        project.name = name;
+        project.description = description;
+        project.goalAmount = goalAmount;
+        project.deadline = deadline;
+        project.isOpen = isOpen;
     }
 
-    // Contribute to a project
+    function deleteProject(uint256 projectId, string memory _login) public onlyLoggedIn(_login) onlyProjectOwner(projectId) {
+        delete projects[projectId];
+    }
+
     function contributeToProject(uint256 projectId, string memory _login) public payable onlyLoggedIn(_login) {
         Project storage project = projects[projectId];
         require(project.isOpen, "Project is not open for contributions.");
@@ -169,14 +178,12 @@ contract FundraisingContract {
         }
     }
 
-    // modify this function to get user balance by username
     function getUserBalance(string memory username) public view returns (uint256) {
         address user = userAddresses[username];
         require(user != address(0), "User does not exist.");
         return user.balance;
     }
 
-    // Refund all contributors
     function refundAll(uint256 projectId, string memory _login) public onlyProjectOwner(projectId) onlyLoggedIn(_login) {
         Project storage project = projects[projectId];
         require(block.timestamp > project.deadline, "Project deadline has not passed.");
@@ -187,23 +194,18 @@ contract FundraisingContract {
             uint256 amount = project.contributions[contributor];
             if (amount > 0) {
                 project.contributions[contributor] = 0;
-                payable(users[contributor].userAddress).transfer(amount);  // Use userAddress
+                payable(users[contributor].userAddress).transfer(amount);
             }
         }
     }
 
-
-    // Change project deadline
     function changeDeadline(uint256 projectId, int256 additionalDays, string memory _login) public onlyProjectOwner(projectId) onlyLoggedIn(_login) {
         Project storage project = projects[projectId];
         require(project.isOpen, "Project is not open.");
 
-        // Якщо additionalDays додатне, додаємо до дедлайну
         if (additionalDays >= 0) {
             project.deadline += uint256(additionalDays) * 1 days;
-        }
-        // Якщо additionalDays від'ємне, перевіряємо, чи не буде дедлайн у минулому
-        else {
+        } else {
             uint256 newDeadline = project.deadline - uint256(-additionalDays) * 1 days;
             if (newDeadline >= block.timestamp) {
                 project.isOpen = false;
@@ -212,13 +214,10 @@ contract FundraisingContract {
         }
     }
 
-    // Get user contribution
     function getContribution(uint256 projectId, string memory _login) public view returns (uint256) {
         return projects[projectId].contributions[_login];
     }
 
-    // Get project contributors
-    // Modify getContributors function
     function getContributors(uint256 projectId) public view returns (Contribution[] memory) {
         Project storage project = projects[projectId];
         uint256 contributorCount = project.contributors.length;
@@ -234,33 +233,28 @@ contract FundraisingContract {
         return contributions;
     }
 
-    // Check project status
     function isProjectOpen(uint256 projectId) public view returns (bool) {
         return projects[projectId].isOpen;
     }
 
-    //generate function that returns array of ProjectReport objects that are open for contribution
     function getOpenProjects() public view returns (ProjectReport[] memory) {
         uint256 openProjectCount = 0;
 
-        // Count the number of open projects
         for (uint256 i = 1; i <= projectCount; i++) {
             if (projects[i].isOpen) {
                 openProjectCount++;
             }
         }
 
-        // Create an array for open projects
         ProjectReport[] memory openProjects = new ProjectReport[](openProjectCount);
-
         uint256 openProjectIndex = 0;
 
-        // Fill the array with project data
         for (uint256 i = 1; i <= projectCount; i++) {
             Project storage project = projects[i];
             if (project.isOpen) {
                 openProjects[openProjectIndex] = ProjectReport({
                     name: project.name,
+                    description: project.description,
                     goalAmount: project.goalAmount,
                     receivedAmount: project.currentAmount,
                     deadline: project.deadline
@@ -276,7 +270,6 @@ contract FundraisingContract {
         uint256 successfulCount = 0;
         uint256 failedCount = 0;
 
-        // Count the number of successful and failed projects
         for (uint256 i = 1; i <= projectCount; i++) {
             Project storage project = projects[i];
             if (project.currentAmount >= project.goalAmount) {
@@ -286,19 +279,18 @@ contract FundraisingContract {
             }
         }
 
-        // Create arrays for successful and failed projects
         successfulProjects = new ProjectReport[](successfulCount);
         failedProjects = new ProjectReport[](failedCount);
 
         uint256 successfulIndex = 0;
         uint256 failedIndex = 0;
 
-        // Fill the arrays with project data
         for (uint256 i = 1; i <= projectCount; i++) {
             Project storage project = projects[i];
             if (project.currentAmount >= project.goalAmount) {
                 successfulProjects[successfulIndex] = ProjectReport({
                     name: project.name,
+                    description: project.description,
                     goalAmount: project.goalAmount,
                     receivedAmount: project.currentAmount,
                     deadline: project.deadline
@@ -307,6 +299,7 @@ contract FundraisingContract {
             } else {
                 failedProjects[failedIndex] = ProjectReport({
                     name: project.name,
+                    description: project.description,
                     goalAmount: project.goalAmount,
                     receivedAmount: project.currentAmount,
                     deadline: project.deadline
