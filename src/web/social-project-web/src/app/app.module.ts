@@ -30,10 +30,8 @@ export function tokenGetter() {
 }
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
   imports: [
+    AppComponent,
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,

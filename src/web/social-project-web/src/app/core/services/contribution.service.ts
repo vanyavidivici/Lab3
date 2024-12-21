@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { ContributeRequest } from '../models/request/contribute-request.model';
+import { ContributeRequest } from '../models/contribute-request.model';
 import { BaseResponseModel } from '../models/base-response';
 
 @Injectable({
