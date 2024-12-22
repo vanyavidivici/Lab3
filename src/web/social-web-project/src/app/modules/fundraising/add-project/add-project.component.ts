@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ProjectService } from '../../../core/services/project.service';
+import { FundraisingService } from '../../../core/services/fundraising.service';
 import { ToastrService } from 'ngx-toastr';
 import { CreateProjectRequest } from '../../../core/models/request/create-project-request.model';
 import { OnInit } from '@angular/core';
@@ -16,7 +16,7 @@ export class AddProjectComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private projectService: ProjectService,
+    private fundraisingService: FundraisingService,
     private toastr: ToastrService,
     private router: Router
   ) {this.projectForm = new FormGroup({});}
@@ -33,7 +33,7 @@ export class AddProjectComponent implements OnInit {
   onSubmit(): void {
     if (this.projectForm.valid) {
       const project: CreateProjectRequest = this.projectForm.value;
-      this.projectService.createProject(project).subscribe(
+      this.fundraisingService.createProject(project).subscribe(
         (response) => {
           this.toastr.success('Project created successfully!');
           this.projectForm.reset();

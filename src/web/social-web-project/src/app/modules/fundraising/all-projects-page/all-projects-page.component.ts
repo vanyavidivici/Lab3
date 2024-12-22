@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ProjectListItem } from '../models/project-list-item.model';
-import { ProjectService } from '../../../core/services/project.service';
+import { FundraisingService } from '../../../core/services/fundraising.service';
 
 @Component({
   selector: 'app-all-projects-page',
@@ -13,10 +13,10 @@ export class AllProjectsPageComponent implements OnInit {
 
   openProjects!: Observable<ProjectListItem[]>;
 
-  constructor(private projectService: ProjectService) { }
+  constructor(private fundraisingService: FundraisingService) { }
 
   ngOnInit(): void {
-    this.openProjects = this.projectService.getOpenProjects().pipe(
+    this.openProjects = this.fundraisingService.getOpenProjects().pipe(
       map(response => response as ProjectListItem[])
     );
   }

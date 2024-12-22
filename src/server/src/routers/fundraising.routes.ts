@@ -30,19 +30,19 @@ router.get('/get-project/:projectId', authUser, async (req, res) => {
 router.post('/change-project', authUser, async (req, res) => {
     const userName = getUserName(req);
     const result = await changeProjectHandler(req.body, userName);
-    res.status(result ? 200 : 500).send(result ? "Project changed successfully" : "Failed to change project");
+    res.status(result ? 200 : 500).json(result);
 });
 
 router.post('/delete-project/:projectId', authUser, async (req, res) => {
     const userName = getUserName(req);
     const result = await deleteProjectHandler(parseInt(req.params.projectId), userName);
-    res.status(result ? 200 : 500).send(result ? "Project deleted successfully" : "Failed to delete project");
+    res.status(result ? 200 : 500).json(result);
 });
 
 router.post('/contribute', authUser, async (req, res) => {
     const userName = getUserName(req);
     const result = await contributeHandler(req.body, userName);
-    res.status(result ? 200 : 500).send(result ? "Contribution successful" : "Failed to contribute");
+    res.status(result ? 200 : 500).json(result);
 });
 
 router.post('/balance', authUser, async (req, res) => {
@@ -54,13 +54,13 @@ router.post('/balance', authUser, async (req, res) => {
 router.post('/refund', authUser, async (req, res) => {
     const userName = getUserName(req);
     const result = await refundHandler(req.body.projectId, userName);
-    res.status(result ? 200 : 500).send(result ? "Refund successful" : "Failed to refund");
+    res.status(result ? 200 : 500).json(result);
 });
 
 router.post('/change-deadline', authUser, async (req, res) => {
     const userName = getUserName(req);
     const result = await changeProjectDeadlineHandler(req.body, userName);
-    res.status(result ? 200 : 500).send(result ? "Deadline changed successfully" : "Failed to change deadline");
+    res.status(result ? 200 : 500).json(result);
 });
 
 router.get('/contributors/:projectId', authUser, async (req, res) => {

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { ProjectService } from '../../../core/services/project.service';
+import { FundraisingService } from '../../../core/services/fundraising.service';
 import { ChangeProjectRequest } from '../../../core/models/request/change-project-request.model';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -16,7 +16,7 @@ export class EditProjectComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private projectService: ProjectService,
+    private fundraisingService: FundraisingService,
     private toastr: ToastrService,
     private route: ActivatedRoute,
     private router: Router
@@ -37,16 +37,16 @@ export class EditProjectComponent implements OnInit {
 
   loadProject(): void {
     // Load the project details and populate the form
-    this.projectService.getProject(this.projectId).subscribe(
+    this.fundraisingService.getProject(this.projectId).subscribe(
       (project) => {
         const currentDate = new Date();
-        const deadlineDate = new Date(currentDate.getTime() + project.data.deadline * 24 * 60 * 60 * 1000);
+        const deadlineDate = new Date(currentDate.getTime() + project.deadline * 24 * 60 * 60 * 1000);
         this.projectForm.patchValue({
-          name: project.data.name,
-          description: project.data.description,
+          name: project.name,
+          description: project.description,
           deadline: deadlineDate,
-          targetAmount: project.data.goalAmount,
-          isOpen: project.data.isOpen
+          targetAmount: project.goalAmount,
+          isOpen: project.isOpen
         });
       },
       (error) => {
@@ -62,7 +62,7 @@ export class EditProjectComponent implements OnInit {
         projectId: this.projectId,
         ...this.projectForm.value
       };
-      this.projectService.changeProject(project).subscribe(
+      this.fundraisingService.changeProject(project).subscribe(
         (response) => {
           this.toastr.success('Project updated successfully!');
         },

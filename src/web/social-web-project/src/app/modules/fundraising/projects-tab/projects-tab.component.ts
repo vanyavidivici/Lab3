@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ProjectListItem } from '../models/project-list-item.model';
-import { ProjectService } from '../../../core/services/project.service';
+import { FundraisingService } from '../../../core/services/fundraising.service';
 
 @Component({
   selector: 'app-projects-tab',
@@ -14,10 +14,10 @@ export class ProjectsTabComponent implements OnInit {
   openProjects!: Observable<ProjectListItem[]>;
   activeTabIndex: number = 0;
 
-  constructor(private projectService: ProjectService) { }
+  constructor(private fundraisingService: FundraisingService) { }
 
   ngOnInit(): void {
-    this.openProjects = this.projectService.getOpenProjects().pipe(
+    this.openProjects = this.fundraisingService.getOpenProjects().pipe(
       map(response => response as ProjectListItem[])
     );
     const savedTabIndex = localStorage.getItem('activeTabIndex');

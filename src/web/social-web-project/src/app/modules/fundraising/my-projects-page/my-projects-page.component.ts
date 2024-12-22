@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { ProjectListItem } from '../models/project-list-item.model';
-import { ProjectService } from '../../../core/services/project.service';
+import { FundraisingService } from '../../../core/services/fundraising.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -13,10 +13,10 @@ export class MyProjectsPageComponent implements OnInit {
 
   openProjects!: Observable<ProjectListItem[]>;
 
-  constructor(private router: Router, private projectService: ProjectService) { }
+  constructor(private router: Router, private fundraisingService: FundraisingService) { }
 
   ngOnInit(): void {
-    this.openProjects = this.projectService.getOpenProjects().pipe(
+    this.openProjects = this.fundraisingService.getOpenProjects().pipe(
       map(response => response)
     );
     console.log(this.openProjects);
