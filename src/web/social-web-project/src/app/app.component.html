@@ -3,6 +3,7 @@
     <h1>Social project</h1>
     <span class="spacer"></span>
     <div class="d-flex align-items-center float-end">
+      <span style="font-size: 14px; margin: 0 15px">Balance: {{ balance }}</span>
       <span style="font-size: 14px; margin: 0 15px">{{ getCurrentUserName() }}</span>
       <button mat-icon-button aria-label="Logout icon" class="logout-icon" (click)="logout()"
         *ngIf="isUserAuthenticated()">

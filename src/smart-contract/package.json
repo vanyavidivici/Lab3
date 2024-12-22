@@ -10,7 +10,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@openzeppelin/contracts": "^5.1.0",
     "chai": "^4.3.7",
     "solc": "^0.8.27",
     "web3": "^4.13.0"

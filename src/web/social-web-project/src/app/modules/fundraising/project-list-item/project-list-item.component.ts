@@ -34,6 +34,7 @@ export class ProjectListItemComponent {
           console.error(error);
         }
       );
+      this.router.navigate(['/my-projects']);
     }
   }
 }

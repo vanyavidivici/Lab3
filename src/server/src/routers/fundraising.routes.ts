@@ -19,7 +19,6 @@ const router = express.Router();
 router.post('/create-project', authUser, async (req, res) => {
     const userName = getUserName(req);
     const result = await createProjectHandler(req.body, userName);
-    console.log(result);
     res.status(result ? 200 : 500).json(result);
 });
 
@@ -36,6 +35,7 @@ router.post('/change-project', authUser, async (req, res) => {
 
 router.post('/delete-project/:projectId', authUser, async (req, res) => {
     const userName = getUserName(req);
+    console.log(userName);
     const result = await deleteProjectHandler(parseInt(req.params.projectId), userName);
     res.status(result ? 200 : 500).json(result);
 });

@@ -42,16 +42,16 @@ export class FundraisingService {
     return this.httpClient.post<boolean>(`${this.baseUrl}/delete-project/${projectId}`, { });
   }
 
-  contribute(model: ContributeRequest, userName: string): Observable<BaseResponseModel<string>> {
-    return this.httpClient.post<BaseResponseModel<string>>(`${this.baseUrl}/contribute`, { ...model, userName });
+  contribute(model: ContributeRequest): Observable<BaseResponseModel<string>> {
+    return this.httpClient.post<BaseResponseModel<string>>(`${this.baseUrl}/contribute`, model);
   }
 
-  getBalance(userName: string): Observable<number> {
-    return this.httpClient.post<number>(`${this.baseUrl}/balance`, { userName });
+  getBalance(): Observable<number> {
+    return this.httpClient.post<number>(`${this.baseUrl}/balance`, { });
   }
 
-  refund(projectId: number, userName: string): Observable<string> {
-    return this.httpClient.post<string>(`${this.baseUrl}/refund`, { projectId, userName });
+  refund(projectId: number): Observable<string> {
+    return this.httpClient.post<string>(`${this.baseUrl}/refund`, projectId);
   }
 
   changeDeadline(projectId: number, newDeadline: Date, userName: string): Observable<string> {

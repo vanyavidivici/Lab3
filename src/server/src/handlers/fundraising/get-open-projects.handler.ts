@@ -4,6 +4,7 @@ import { ProjectReport } from "../../models/response/projects-report-response.mo
 export async function getOpenProjectsHandler(): Promise<ProjectReport[]> {
     try {
         const contractResult = await getOpenProjects();
+        console.log(contractResult);
         return contractResult;
     }
     catch (error) {

@@ -23,19 +23,8 @@ const input = {
     },
 };
 
-
-// Define the import callback function
-function findImports(importPath) {
-    if (importPath.startsWith('@openzeppelin/')) {
-        const openZeppelinPath = path.resolve(__dirname, '../node_modules', importPath);
-        return { contents: fs.readFileSync(openZeppelinPath, 'utf8') };
-    } else {
-        return { error: 'File not found' };
-    }
-}
-
 // Compile the contract
-const output = JSON.parse(solc.compile(JSON.stringify(input), { import: findImports }));
+const output = JSON.parse(solc.compile(JSON.stringify(input)));
 
 // Check for compilation errors
 if (output.errors) {

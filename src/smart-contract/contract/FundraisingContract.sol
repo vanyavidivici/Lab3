@@ -60,7 +60,7 @@ contract FundraisingContract {
     }
 
     modifier onlyProjectOwner(uint256 projectId) {
-        require(msg.sender == projects[projectId].owner, "Only project owner can perform this action.");
+        require(payable(msg.sender) == projects[projectId].owner, "Only project owner can perform this action.");
         _;
     }
 
@@ -182,7 +182,7 @@ contract FundraisingContract {
             if (keccak256(abi.encodePacked(projects[i].creatorUsername)) == keccak256(abi.encodePacked(username))) {
                 Project storage project = projects[i];
                 userProjects[index] = ProjectInfo({
-                    projectId: index,
+                    projectId: i,
                     name: project.name,
                     description: project.description,
                     goalAmount: project.goalAmount,
@@ -311,7 +311,7 @@ contract FundraisingContract {
             Project storage project = projects[i];
             if (project.isOpen) {
                 openProjects[openProjectIndex] = ProjectInfo({
-                    projectId: openProjectIndex,
+                    projectId: i,
                     name: project.name,
                     description: project.description,
                     goalAmount: project.goalAmount,

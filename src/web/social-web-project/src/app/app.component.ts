@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { AccountService } from './core/services/account.service';
+import { FundraisingService } from './core/services/fundraising.service';
 
 @Component({
   selector: 'app-root',
@@ -15,14 +16,15 @@ export class AppComponent {
   isCollapsed = false;
   currentLanguage: string = '';
   isAuthenticated: boolean = false;
+  balance: number = 0;
 
   protected selected: number = -1;
 
   constructor(
     private accountService: AccountService,
+    private fundraisingService: FundraisingService,
   ) {
     this.isUserAuthenticated();
-
   }
 
   isUserAuthenticated(): boolean {
@@ -41,6 +43,17 @@ export class AppComponent {
   getCurrentUserName(): string {
     const email = localStorage.getItem('username');
     return email ? email : '';
+  }
+
+  getBalance(): void {
+    this.fundraisingService.getBalance().subscribe(
+      (response) => {
+        this.balance = response;
+      },
+      (error) => {
+        console.error('Error fetching balance:', error);
+      }
+    );
   }
 
   logout = (): void => {

@@ -105,8 +105,8 @@ export async function changeProject(projectId: number, name: string, description
 
 export async function deleteProject(projectId: number, login: string): Promise<boolean> {
     try {
-        const result = await contract.methods.deleteProject(projectId, login).send({ from: fromAddress });
-        return result;
+        await contract.methods.deleteProject(projectId, login).send({ from: fromAddress });
+        return true;
     } catch (error) {
         console.error(error);
         return false;
