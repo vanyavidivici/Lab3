@@ -16,8 +16,8 @@ export class MyProjectsPageComponent implements OnInit {
   constructor(private router: Router, private fundraisingService: FundraisingService) { }
 
   ngOnInit(): void {
-    this.openProjects = this.fundraisingService.getOpenProjects().pipe(
-      map(response => response)
+    this.openProjects = this.fundraisingService.getMyProjects().pipe(
+      map(response => response as ProjectListItem[])
     );
     console.log(this.openProjects);
   }

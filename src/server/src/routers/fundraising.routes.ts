@@ -12,6 +12,7 @@ import { getBalanceHandler } from '../handlers/fundraising/get-balance.handler';
 import { changeProjectHandler } from '../handlers/fundraising/change-project.handler';
 import { deleteProjectHandler } from '../handlers/fundraising/delete-project.handler';
 import { getProjectHandler } from '../handlers/fundraising/get-project.handler';
+import { getMyProjectsHandler } from '../handlers/fundraising/get-my-projects.handler';
 
 const router = express.Router();
 
@@ -81,6 +82,12 @@ router.get('/is-project-open/:projectId', authUser, async (req, res) => {
 
 router.get('/open-projects', authUser, async (req, res) => {
     const result = await getOpenProjectsHandler();
+    res.status(result ? 200 : 500).json(result);
+});
+
+router.get('/my-projects', authUser, async (req, res) => {
+    const userName = getUserName(req);
+    const result = await getMyProjectsHandler(userName);
     res.status(result ? 200 : 500).json(result);
 });
 

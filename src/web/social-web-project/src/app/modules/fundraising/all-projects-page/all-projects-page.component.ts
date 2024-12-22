@@ -17,7 +17,10 @@ export class AllProjectsPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.openProjects = this.fundraisingService.getOpenProjects().pipe(
-      map(response => response as ProjectListItem[])
+      map(response => {
+        console.log(response);
+        return response as ProjectListItem[];
+      })
     );
   }
 }

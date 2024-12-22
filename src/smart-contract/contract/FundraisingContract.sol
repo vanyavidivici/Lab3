@@ -19,12 +19,14 @@ contract FundraisingContract {
         bool isOpen;
         string[] contributors;
         mapping(string => uint256) contributions;
+        string creatorUsername; // Add the username of the creator
     }
 
     struct ProjectInfo {
         string name;
         string description;
         uint256 goalAmount;
+        uint256 receivedAmount;
         uint256 deadline;
         bool isOpen;
     }
@@ -118,10 +120,11 @@ contract FundraisingContract {
         newProject.name = name;
         newProject.description = description;
         newProject.owner = payable(msg.sender);
-        newProject.goalAmount = goalAmount * 1 ether;
+        newProject.goalAmount = goalAmount;
         newProject.currentAmount = 0;
         newProject.deadline = block.timestamp + (durationInDays * 1 days);
         newProject.isOpen = true;
+        newProject.creatorUsername = _login; // Set the creator's username
 
         emit ProjectCreated(projectCount, name, description, goalAmount, newProject.deadline, msg.sender);
 
@@ -157,9 +160,38 @@ contract FundraisingContract {
             name: project.name,
             description: project.description,
             goalAmount: project.goalAmount,
+            receivedAmount: project.currentAmount,
             deadline: project.deadline,
             isOpen: project.isOpen
         });
+    }
+
+    function getProjectsByUsername(string memory username) public onlyLoggedIn(username) returns (ProjectInfo[] memory) {
+        uint256 count = 0;
+        for (uint256 i = 1; i <= projectCount; i++) {
+            if (keccak256(abi.encodePacked(projects[i].creatorUsername)) == keccak256(abi.encodePacked(username))) {
+                count++;
+            }
+        }
+
+        ProjectInfo[] memory userProjects = new ProjectInfo[](count);
+        uint256 index = 0;
+        for (uint256 i = 1; i <= projectCount; i++) {
+            if (keccak256(abi.encodePacked(projects[i].creatorUsername)) == keccak256(abi.encodePacked(username))) {
+                Project storage project = projects[i];
+                userProjects[index] = ProjectInfo({
+                    name: project.name,
+                    description: project.description,
+                    goalAmount: project.goalAmount,
+                    receivedAmount: project.currentAmount,
+                    deadline: project.deadline,
+                    isOpen: project.isOpen
+                });
+                index++;
+            }
+        }
+
+        return userProjects;
     }
 
     function changeProject(
@@ -260,7 +292,7 @@ contract FundraisingContract {
         return projects[projectId].isOpen;
     }
 
-    function getOpenProjects() public view returns (ProjectReport[] memory) {
+    function getOpenProjects() public view returns (ProjectInfo[] memory) {
         uint256 openProjectCount = 0;
 
         for (uint256 i = 1; i <= projectCount; i++) {
@@ -269,18 +301,19 @@ contract FundraisingContract {
             }
         }
 
-        ProjectReport[] memory openProjects = new ProjectReport[](openProjectCount);
+        ProjectInfo[] memory openProjects = new ProjectInfo[](openProjectCount);
         uint256 openProjectIndex = 0;
 
         for (uint256 i = 1; i <= projectCount; i++) {
             Project storage project = projects[i];
             if (project.isOpen) {
-                openProjects[openProjectIndex] = ProjectReport({
+                openProjects[openProjectIndex] = ProjectInfo({
                     name: project.name,
                     description: project.description,
                     goalAmount: project.goalAmount,
                     receivedAmount: project.currentAmount,
-                    deadline: project.deadline
+                    deadline: project.deadline,
+                    isOpen: project.isOpen
                 });
                 openProjectIndex++;
             }

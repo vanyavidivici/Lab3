@@ -18,9 +18,12 @@ export class FundraisingService {
 
   constructor(private httpClient: HttpClient) { }
 
-
   getOpenProjects(): Observable<ProjectReport[]> {
     return this.httpClient.get<ProjectReport[]>(`${this.baseUrl}/open-projects`);
+  }
+
+  getMyProjects(): Observable<ProjectReport[]> {
+    return this.httpClient.get<ProjectReport[]>(`${this.baseUrl}/my-projects`);
   }
 
   createProject(model: CreateProjectRequest): Observable<number> {

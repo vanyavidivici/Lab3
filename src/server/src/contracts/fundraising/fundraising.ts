@@ -185,14 +185,33 @@ export async function isProjectOpen(projectId: number): Promise<boolean> {
     }
 }
 
+export async function getProjectsByUsername(username: string): Promise<ProjectReport[]> {
+    try {
+        const result = await contract.methods.getProjectsByUsername(username).call();
+        return result.map((project: { name: string, description: string, goalAmount: string, receivedAmount: string, deadline: string, isOpen: boolean }) => ({
+            name: project.name,
+            description: project.description,
+            goalAmount: parseFloat(project.goalAmount),
+            receivedAmount: parseFloat(project.receivedAmount),
+            deadline: parseInt(project.deadline),
+            isOpen: project.isOpen
+        }));
+    } catch (error) {
+        console.error(error);
+        return [];
+    }
+}
+
 export async function getOpenProjects(): Promise<ProjectReport[]> {
     try {
         const result = await contract.methods.getOpenProjects().call();
-        return result.map((project: { name: string, goalAmount: string, receivedAmount: string, deadline: string }) => ({
+        return result.map((project: { name: string, description: string, goalAmount: string, receivedAmount: string, deadline: string, isOpen: boolean }) => ({
             name: project.name,
+            description: project.description,
             goalAmount: parseFloat(project.goalAmount),
             receivedAmount: parseFloat(project.receivedAmount),
-            deadline: parseInt(project.deadline)
+            deadline: parseInt(project.deadline),
+            isOpen: project.isOpen
         }));
     } catch (error) {
         console.error(error);
