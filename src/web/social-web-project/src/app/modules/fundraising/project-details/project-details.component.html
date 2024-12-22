@@ -1,1 +1,9 @@
-<p>project-details works!</p>
+<mat-card class="project-details-card">
+    <mat-card-title>{{ project.name }}</mat-card-title>
+    <mat-card-content>
+      <p>{{ project.description }}</p>
+      <p>Goal Amount: {{ project.goalAmount | currency }}</p>
+      <p>Deadline: {{ project.deadline | date }}</p>
+      <p>Status: {{ project.isOpen ? 'Open' : 'Closed' }}</p>
+    </mat-card-content>
+  </mat-card>

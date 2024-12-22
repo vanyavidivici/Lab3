@@ -18,6 +18,10 @@ export class ProjectListItemComponent {
     private toastr: ToastrService
   ) { }
 
+  viewProjectDetails(): void {
+    this.router.navigate(['/project-details', this.project.projectId]);
+  }
+
   editProject(): void {
     this.router.navigate(['/edit-project', this.project.projectId]);
   }
@@ -34,7 +38,6 @@ export class ProjectListItemComponent {
           console.error(error);
         }
       );
-      this.router.navigate(['/my-projects']);
     }
   }
 }

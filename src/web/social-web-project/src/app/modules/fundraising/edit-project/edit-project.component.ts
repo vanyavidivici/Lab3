@@ -20,10 +20,7 @@ export class EditProjectComponent implements OnInit {
     private toastr: ToastrService,
     private route: ActivatedRoute,
     private router: Router
-  ) {this.projectForm = new FormGroup({});}
-
-  ngOnInit(): void {
-    this.projectId = this.route.snapshot.params['id'];
+  ) {
     this.projectForm = this.fb.group({
       name: ['', Validators.required],
       description: ['', Validators.required],
@@ -31,7 +28,10 @@ export class EditProjectComponent implements OnInit {
       targetAmount: ['', [Validators.required, Validators.min(1)]],
       isOpen: [false, Validators.required]
     });
+  }
 
+  ngOnInit(): void {
+    this.projectId = this.route.snapshot.params['id'];
     this.loadProject();
   }
 
@@ -39,10 +39,8 @@ export class EditProjectComponent implements OnInit {
     // Load the project details and populate the form
     this.fundraisingService.getProject(this.projectId).subscribe(
       (project) => {
-        const currentDate = new Date();
-        const deadlineDate = new Date(currentDate.getTime() + project.deadline * 24 * 60 * 60 * 1000);
+        const deadlineDate = new Date(project.deadline * 1000); // Assuming deadline is in seconds
         this.projectForm.patchValue({
-          projectId: project.projectId,
           name: project.name,
           description: project.description,
           deadline: deadlineDate,
@@ -61,18 +59,19 @@ export class EditProjectComponent implements OnInit {
     if (this.projectForm.valid) {
       const project: ChangeProjectRequest = {
         projectId: this.projectId,
-        ...this.projectForm.value
+        ...this.projectForm.value,
+        deadline: Math.floor(new Date(this.projectForm.value.deadline).getTime() / 1000) // Convert to seconds
       };
       this.fundraisingService.changeProject(project).subscribe(
         (response) => {
           this.toastr.success('Project updated successfully!');
+          this.router.navigate(['/my-projects']);
         },
         (error) => {
           this.toastr.error('Failed to update project.');
           console.error(error);
         }
       );
-      this.router.navigate(['']);
     }
   }
 }

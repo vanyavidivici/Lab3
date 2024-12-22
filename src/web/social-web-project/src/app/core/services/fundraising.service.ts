@@ -31,7 +31,7 @@ export class FundraisingService {
   }
 
   getProject(projectId: number): Observable<Project> {
-    return this.httpClient.get<Project>(`${this.baseUrl}/project/${projectId}`);
+    return this.httpClient.get<Project>(`${this.baseUrl}/get-project/${projectId}`);
    }
 
   changeProject(model: ChangeProjectRequest): Observable<boolean> {
