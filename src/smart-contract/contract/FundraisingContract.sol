@@ -49,6 +49,8 @@ contract FundraisingContract {
     uint256 public projectCount;
     address public contractOwner;
 
+    event ProjectCreated(uint256 projectId, string name, string description, uint256 goalAmount, uint256 deadline, address owner);
+
     modifier onlyOwner() {
         require(msg.sender == contractOwner, "Only contract owner can perform this action.");
         _;
@@ -120,6 +122,8 @@ contract FundraisingContract {
         newProject.currentAmount = 0;
         newProject.deadline = block.timestamp + (durationInDays * 1 days);
         newProject.isOpen = true;
+
+        emit ProjectCreated(projectCount, name, description, goalAmount, newProject.deadline, msg.sender);
 
         return projectCount;
     }

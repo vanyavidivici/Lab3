@@ -43,7 +43,7 @@ export class AddProjectComponent implements OnInit {
           console.error(error);
         }
       );
-      this.router.navigate(['/my-projects']);
+      this.router.navigate(['']);
     }
   }
 }

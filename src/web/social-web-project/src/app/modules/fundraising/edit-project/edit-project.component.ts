@@ -65,13 +65,13 @@ export class EditProjectComponent implements OnInit {
       this.projectService.changeProject(project).subscribe(
         (response) => {
           this.toastr.success('Project updated successfully!');
-          this.router.navigate(['/my-projects']);
         },
         (error) => {
           this.toastr.error('Failed to update project.');
           console.error(error);
         }
       );
+      this.router.navigate(['']);
     }
   }
 }

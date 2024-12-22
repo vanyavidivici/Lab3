@@ -1,3 +1,4 @@
 <div class="my-projects-page">
+  <button mat-raised-button color="primary" (click)="navigateToAddProject()">Create New Project</button>
     <app-project-list-item *ngFor="let project of openProjects | async" [project]="project"></app-project-list-item>
   </div>

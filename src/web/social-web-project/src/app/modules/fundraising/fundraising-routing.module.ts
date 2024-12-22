@@ -1,10 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AddProjectComponent } from './add-project/add-project.component';
-import { AllProjectsPageComponent } from './all-projects-page/all-projects-page.component';
 import { ProjectsTabComponent } from './projects-tab/projects-tab.component';
 
 const routes: Routes = [
+  { path: 'add-project', component: AddProjectComponent },
+  { path: 'edit-project', component: AddProjectComponent },
   { path: '', component: ProjectsTabComponent },
   { path: '**', redirectTo: '' }
 ];

@@ -67,8 +67,9 @@ export async function logoutUser(login: string): Promise<void> {
 
 export async function createProject(name: string, description: string, goalAmount: number, durationInDays: number, login: string): Promise<number> {
     try {
-        const projectId = await contract.methods.createProject(name, description, goalAmount, durationInDays, login).send({ from: fromAddress });
-        return projectId;
+        const result = await contract.methods.createProject(name, description, goalAmount, durationInDays, login).send({ from: fromAddress });
+        const projectId = result.events.ProjectCreated.returnValues.projectId;
+        return Number(projectId); // Convert BigInt to number
     } catch (error) {
         console.error(error);
         return 0;

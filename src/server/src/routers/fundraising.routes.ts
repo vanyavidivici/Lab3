@@ -18,7 +18,8 @@ const router = express.Router();
 router.post('/create-project', authUser, async (req, res) => {
     const userName = getUserName(req);
     const result = await createProjectHandler(req.body, userName);
-    res.status(result ? 200 : 500).send(result ? "Project created successfully" : "Failed to create project");
+    console.log(result);
+    res.status(result ? 200 : 500).json(result);
 });
 
 router.get('/get-project/:projectId', authUser, async (req, res) => {
