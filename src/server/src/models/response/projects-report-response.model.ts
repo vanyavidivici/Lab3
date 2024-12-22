@@ -1,4 +1,5 @@
 export interface ProjectReport {
+    projectId: number;
     name: string;
     description: string;
     goalAmount: number;

@@ -80,6 +80,7 @@ export async function getProject(projectId: number): Promise<Project> {
     try {
         const result = await contract.methods.getProjectReport(projectId).call();
         return {
+            projectId: parseInt(result.projectId),
             name: result.name,
             description: result.description,
             goalAmount: parseFloat(result.goalAmount),
@@ -188,7 +189,8 @@ export async function isProjectOpen(projectId: number): Promise<boolean> {
 export async function getProjectsByUsername(username: string): Promise<ProjectReport[]> {
     try {
         const result = await contract.methods.getProjectsByUsername(username).call();
-        return result.map((project: { name: string, description: string, goalAmount: string, receivedAmount: string, deadline: string, isOpen: boolean }) => ({
+        return result.map((project: { projectId: string, name: string, description: string, goalAmount: string, receivedAmount: string, deadline: string, isOpen: boolean }) => ({
+            projectId: parseInt(project.projectId),
             name: project.name,
             description: project.description,
             goalAmount: parseFloat(project.goalAmount),
@@ -205,7 +207,8 @@ export async function getProjectsByUsername(username: string): Promise<ProjectRe
 export async function getOpenProjects(): Promise<ProjectReport[]> {
     try {
         const result = await contract.methods.getOpenProjects().call();
-        return result.map((project: { name: string, description: string, goalAmount: string, receivedAmount: string, deadline: string, isOpen: boolean }) => ({
+        return result.map((project: { projectId: string, name: string, description: string, goalAmount: string, receivedAmount: string, deadline: string, isOpen: boolean }) => ({
+            projectId: parseInt(project.projectId),
             name: project.name,
             description: project.description,
             goalAmount: parseFloat(project.goalAmount),

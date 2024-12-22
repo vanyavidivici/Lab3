@@ -23,6 +23,7 @@ contract FundraisingContract {
     }
 
     struct ProjectInfo {
+        uint256 projectId;
         string name;
         string description;
         uint256 goalAmount;
@@ -157,6 +158,7 @@ contract FundraisingContract {
     function getProjectReport(uint256 projectId) public view returns (ProjectInfo memory) {
         Project storage project = projects[projectId];
         return ProjectInfo({
+            projectId: projectId,
             name: project.name,
             description: project.description,
             goalAmount: project.goalAmount,
@@ -180,6 +182,7 @@ contract FundraisingContract {
             if (keccak256(abi.encodePacked(projects[i].creatorUsername)) == keccak256(abi.encodePacked(username))) {
                 Project storage project = projects[i];
                 userProjects[index] = ProjectInfo({
+                    projectId: index,
                     name: project.name,
                     description: project.description,
                     goalAmount: project.goalAmount,
@@ -308,6 +311,7 @@ contract FundraisingContract {
             Project storage project = projects[i];
             if (project.isOpen) {
                 openProjects[openProjectIndex] = ProjectInfo({
+                    projectId: openProjectIndex,
                     name: project.name,
                     description: project.description,
                     goalAmount: project.goalAmount,

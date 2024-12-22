@@ -8,6 +8,6 @@ export async function getProjectHandler(projectId: number): Promise<Project> {
     }
     catch (error) {
         console.error(error);
-        return { name: "", description: "", goalAmount: 0, deadline: 0, isOpen: false };
+        return { projectId: 0, name: "", description: "", goalAmount: 0, deadline: 0, isOpen: false };
     }
 }

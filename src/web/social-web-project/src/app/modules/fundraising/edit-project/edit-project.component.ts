@@ -42,6 +42,7 @@ export class EditProjectComponent implements OnInit {
         const currentDate = new Date();
         const deadlineDate = new Date(currentDate.getTime() + project.deadline * 24 * 60 * 60 * 1000);
         this.projectForm.patchValue({
+          projectId: project.projectId,
           name: project.name,
           description: project.description,
           deadline: deadlineDate,

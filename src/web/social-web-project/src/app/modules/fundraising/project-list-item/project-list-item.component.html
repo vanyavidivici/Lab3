@@ -5,4 +5,6 @@
     <p>Received Amount: {{ project.receivedAmount | currency }}</p>
     <p>Deadline: {{ project.deadline | date }}</p>
     <p>Status: {{ project.isOpen ? 'Open' : 'Closed' }}</p>
+    <button mat-button color="primary" (click)="editProject()">Edit</button>
+    <button mat-button color="warn" (click)="deleteProject()">Delete</button>
   </div>
