@@ -18,8 +18,8 @@ export class ProjectService {
 
   constructor(private httpClient: HttpClient) { }
 
-  getOpenProjects(): Observable<BaseResponseModel<ProjectReport[]>> {
-    return this.httpClient.get<BaseResponseModel<ProjectReport[]>>(`${this.baseUrl}/open-projects`);
+  getOpenProjects(): Observable<ProjectReport[]> {
+    return this.httpClient.get<ProjectReport[]>(`${this.baseUrl}/open-projects`);
   }
 
   createProject(model: CreateProjectRequest): Observable<BaseResponseModel<number>> {

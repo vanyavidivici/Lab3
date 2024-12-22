@@ -18,7 +18,7 @@ export class ProjectsTabComponent implements OnInit {
 
   ngOnInit(): void {
     this.openProjects = this.projectService.getOpenProjects().pipe(
-      map(response => response.data as ProjectListItem[])
+      map(response => response as ProjectListItem[])
     );
     const savedTabIndex = localStorage.getItem('activeTabIndex');
     if (savedTabIndex !== null) {

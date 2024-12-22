@@ -17,7 +17,7 @@ export class MyProjectsPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.openProjects = this.projectService.getOpenProjects().pipe(
-      map(response => response.data)
+      map(response => response)
     );
     console.log(this.openProjects);
   }
