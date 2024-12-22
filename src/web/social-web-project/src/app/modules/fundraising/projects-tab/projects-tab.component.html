@@ -1,0 +1,17 @@
+<mat-tab-group mat-stretch-tabs="false" mat-align-tabs="center" [(selectedIndex)]="activeTabIndex" (selectedTabChange)="onTabChange($event)">
+    <mat-tab label="My projects">
+        <ng-template matTabContent>
+            <app-my-projects-page></app-my-projects-page>
+        </ng-template>
+    </mat-tab>
+    <mat-tab label="All projects">
+        <ng-template matTabContent>
+            <app-all-projects-page></app-all-projects-page>
+        </ng-template>
+    </mat-tab>
+    <mat-tab label="Report">
+        <ng-template matTabContent>
+            <app-report-page></app-report-page>
+        </ng-template>
+    </mat-tab>
+</mat-tab-group>

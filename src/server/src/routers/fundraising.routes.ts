@@ -64,7 +64,7 @@ router.post('/change-deadline', authUser, async (req, res) => {
 
 router.get('/contributors/:projectId', authUser, async (req, res) => {
     const result = await getContributorsHandler(parseInt(req.params.projectId));
-    res.status(result.length > 0 ? 200 : 500).json(result);
+    res.status(result ? 200 : 500).json(result);
 });
 
 router.get('/contribution/:projectId', authUser, async (req, res) => {
@@ -80,7 +80,7 @@ router.get('/is-project-open/:projectId', authUser, async (req, res) => {
 
 router.get('/open-projects', authUser, async (req, res) => {
     const result = await getOpenProjectsHandler();
-    res.status(result.length > 0 ? 200 : 500).json(result);
+    res.status(result ? 200 : 500).json(result);
 });
 
 export default router;

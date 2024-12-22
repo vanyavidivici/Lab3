@@ -5,13 +5,14 @@ import { ProjectListItem } from '../models/project-list-item.model';
 import { ProjectService } from '../../../core/services/project.service';
 
 @Component({
-  selector: 'app-all-projects-page',
-  templateUrl: './all-projects-page.component.html',
-  styleUrls: ['./all-projects-page.component.scss']
+  selector: 'app-projects-tab',
+  templateUrl: './projects-tab.component.html',
+  styleUrls: ['./projects-tab.component.scss']
 })
-export class AllProjectsPageComponent implements OnInit {
+export class ProjectsTabComponent implements OnInit {
 
   openProjects!: Observable<ProjectListItem[]>;
+  activeTabIndex: number = 0;
 
   constructor(private projectService: ProjectService) { }
 
@@ -19,5 +20,14 @@ export class AllProjectsPageComponent implements OnInit {
     this.openProjects = this.projectService.getOpenProjects().pipe(
       map(response => response.data as ProjectListItem[])
     );
+    const savedTabIndex = localStorage.getItem('activeTabIndex');
+    if (savedTabIndex !== null) {
+      this.activeTabIndex = +savedTabIndex;
+    }
+  }
+
+  onTabChange(event: any): void {
+    this.activeTabIndex = event.index;
+    localStorage.setItem('activeTabIndex', this.activeTabIndex.toString());
   }
 }

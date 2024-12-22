@@ -13,12 +13,12 @@ import { Project } from '../models/response/project-response.model';
 })
 export class ProjectService {
 
-  private baseUrl: string = environment.apiBaseUrl + '/projects';
+  private baseUrl: string = environment.apiBaseUrl;
 
   constructor(private httpClient: HttpClient) { }
 
   getOpenProjects(): Observable<BaseResponseModel<ProjectReport[]>> {
-    return this.httpClient.get<BaseResponseModel<ProjectReport[]>>(`${this.baseUrl}/open-projects`);
+    return this.httpClient.get<BaseResponseModel<ProjectReport[]>>(`${this.baseUrl}/fundraising/open-projects`);
   }
 
   createProject(model: CreateProjectRequest): Observable<BaseResponseModel<number>> {

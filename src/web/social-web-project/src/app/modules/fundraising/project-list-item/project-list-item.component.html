@@ -1,0 +1,8 @@
+<div class="project-list-item">
+    <h2>{{ project.name }}</h2>
+    <p>{{ project.description }}</p>
+    <p>Goal Amount: {{ project.goalAmount | currency }}</p>
+    <p>Received Amount: {{ project.receivedAmount | currency }}</p>
+    <p>Deadline: {{ project.deadline | date }}</p>
+    <p>Status: {{ project.isOpen ? 'Open' : 'Closed' }}</p>
+  </div>

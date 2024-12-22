@@ -23,6 +23,7 @@ import { MatTableModule } from "@angular/material/table";
 import { MatButtonModule } from '@angular/material/button';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AccountModule } from './modules/account/account.module';
+import { FundraisingModule } from './modules/fundraising/fundraising.module';
 
 
 export function tokenGetter() {
@@ -68,7 +69,8 @@ export function tokenGetter() {
     ReactiveFormsModule,
     MatButtonModule,
     MatIconModule,
-    AccountModule
+    AccountModule,
+    FundraisingModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: BearerTokenInterceptor, multi: true },

@@ -1,1 +1,3 @@
-<p>my-projects-page works!</p>
+<div class="my-projects-page">
+    <app-project-list-item *ngFor="let project of openProjects | async" [project]="project"></app-project-list-item>
+  </div>

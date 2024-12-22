@@ -15,6 +15,11 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { ProjectsTabComponent } from './projects-tab/projects-tab.component';
+import { ProjectListItemComponent } from './project-list-item/project-list-item.component';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @NgModule({
   declarations: [
@@ -23,7 +28,9 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
     EditProjectComponent,
     MyProjectsPageComponent,
     ProjectDetailsComponent,
-    ReportPageComponent
+    ReportPageComponent,
+    ProjectsTabComponent,
+    ProjectListItemComponent
   ],
   imports: [
     CommonModule,
@@ -34,6 +41,10 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
     MatFormFieldModule,
     MatInputModule,
     MatDatepickerModule,
+    MatButtonModule,
+    MatToolbarModule,
+    MatIconModule,
+    MatTabsModule
   ]
 })
 export class FundraisingModule { }
