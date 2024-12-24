@@ -3,7 +3,9 @@ import { changeDeadline } from "../../contracts/fundraising/fundraising";
 
 export async function changeProjectDeadlineHandler(model: ChangeProjectDeadlineRequest, userName: string): Promise<boolean> {
     try {
-        const contractResult = await changeDeadline(model.projectId, model.additionalDays, userName);
+        const deadlineDate = new Date(model.newDeadline);
+        const timestamp = Math.floor(deadlineDate.getTime() / 1000);
+        const contractResult = await changeDeadline(model.projectId, timestamp, userName);
         return contractResult;
     }
     catch (error) {

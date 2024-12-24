@@ -115,7 +115,7 @@ export async function deleteProject(projectId: number, login: string): Promise<b
 
 export async function contributeToProject(projectId: number, login: string, amount: number): Promise<boolean> {
     try {
-        await contract.methods.contributeToProject(projectId, login).send({ from: fromAddress, value: web3.utils.toWei(amount.toString(), 'ether') });
+        await contract.methods.contributeToProject(projectId, amount, login).send({ from: fromAddress/*, value: web3.utils.toWei(amount.toString(), 'ether')*/ });
         return true;
     } catch (error) {
         console.error(error);
@@ -125,7 +125,8 @@ export async function contributeToProject(projectId: number, login: string, amou
 
 export async function getBalance(username: string): Promise<number> {
     try {
-        const balance = await contract.methods.getUserBalance(username).send({ from: fromAddress });
+        const balance = await contract.methods.getUserBalance(username).call({ from: fromAddress });
+        console.log(balance);
         return parseFloat(balance);
     } catch (error) {
         console.error(error);
@@ -143,9 +144,9 @@ export async function refundAll(projectId: number, login: string): Promise<boole
     }
 }
 
-export async function changeDeadline(projectId: number, additionalDays: number, login: string): Promise<boolean> {
+export async function changeDeadline(projectId: number, newDeadline: number, login: string): Promise<boolean> {
     try {
-        await contract.methods.changeDeadline(projectId, additionalDays, login).send({ from: fromAddress });
+        await contract.methods.changeDeadline(projectId, newDeadline, login).send({ from: fromAddress });
         return true;
     } catch (error) {
         console.error(error);
@@ -227,19 +228,21 @@ export async function getProjectsReport(): Promise<ProjectReportResult> {
     try {
         const result = await contract.methods.getProjectsReport().call();
         return {
-            successfulProjects: result[0].map((project: { name: string, description: string, goalAmount: string, receivedAmount: string, deadline: string }) => ({
+            successfulProjects: result[0].map((project: { name: string, description: string, goalAmount: string, receivedAmount: string, deadline: string, isOpen: boolean }) => ({
                 name: project.name,
                 description: project.description,
                 goalAmount: parseFloat(project.goalAmount),
                 receivedAmount: parseFloat(project.receivedAmount),
-                deadline: parseInt(project.deadline)
+                deadline: parseInt(project.deadline),
+                isOpen: project.isOpen
             })),
-            failedProjects: result[1].map((project: { name: string, description: string, goalAmount: string, receivedAmount: string, deadline: string }) => ({
+            failedProjects: result[1].map((project: { name: string, description: string, goalAmount: string, receivedAmount: string, deadline: string, isOpen: boolean}) => ({
                 name: project.name,
                 description: project.description,
                 goalAmount: parseFloat(project.goalAmount),
                 receivedAmount: parseFloat(project.receivedAmount),
-                deadline: parseInt(project.deadline)
+                deadline: parseInt(project.deadline),
+                isOpen: project.isOpen
             }))
         };
     } catch (error) {

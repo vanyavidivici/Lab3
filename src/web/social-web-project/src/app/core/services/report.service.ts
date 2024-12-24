@@ -12,8 +12,7 @@ import { Project } from '../models/response/project-response.model';
 })
 export class ReportService {
 
-  private prefix: string = '/fundraising';
-  private baseUrl: string = environment.apiBaseUrl + this.prefix;
+  private baseUrl: string = environment.apiBaseUrl + '/report';
 
   constructor(private httpClient: HttpClient) { }
 

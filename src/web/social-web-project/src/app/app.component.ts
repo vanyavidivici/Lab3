@@ -45,15 +45,18 @@ export class AppComponent {
   }
 
   getBalance(): number {
-    var balance = 0;
-    this.fundraisingService.getBalance().subscribe(
-      (response) => {
-        balance = response;
-      },
-      (error) => {
-        console.error('Error fetching balance:', error);
-      }
-    );
+    var balance = Number(localStorage.getItem('balance'));
+    if (!balance) {
+      this.fundraisingService.getBalance().subscribe(
+        (response) => {
+          balance = response;
+          localStorage.setItem('balance', balance.toString());
+        },
+        (error) => {
+          console.error('Error fetching balance:', error);
+        }
+      );
+    }
     return balance;
   }
 

@@ -6,6 +6,7 @@ contract FundraisingContract {
         bytes32 passwordHash;
         string login;
         address userAddress;
+        int256 balance;
         bool isLoggedIn;
     }
 
@@ -43,9 +44,9 @@ contract FundraisingContract {
         uint256 goalAmount;
         uint256 receivedAmount;
         uint256 deadline;
+        bool isOpen;
     }
 
-    mapping(string => address) private userAddresses;
     mapping(string => User) private users;
     mapping(uint256 => Project) private projects;
 
@@ -77,7 +78,6 @@ contract FundraisingContract {
     }
 
     function registerUser(string memory _login, string memory _password) public {
-        require(userAddresses[_login] == address(0), "Username already taken.");
         require(bytes(_login).length > 0, "Login cannot be empty.");
         require(users[_login].passwordHash == 0, "User already exists.");
 
@@ -85,10 +85,9 @@ contract FundraisingContract {
             login: _login,
             passwordHash: keccak256(abi.encodePacked(_password)),
             userAddress: msg.sender,
+            balance: 100,
             isLoggedIn: false
         });
-
-        userAddresses[_login] = msg.sender;
     }
 
     function loginUser(string memory _login, string memory _password) public {
@@ -218,27 +217,29 @@ contract FundraisingContract {
         delete projects[projectId];
     }
 
-    function contributeToProject(uint256 projectId, string memory _login) public payable onlyLoggedIn(_login) {
+    function contributeToProject(uint256 projectId, uint256 sum, string memory _login) public onlyLoggedIn(_login) {
         Project storage project = projects[projectId];
         require(project.isOpen, "Project is not open for contributions.");
         require(block.timestamp <= project.deadline, "Project deadline has passed.");
-        require(msg.value > 0, "Contribution must be greater than zero.");
+        require(sum > 0, "Contribution must be greater than zero.");
 
         if (project.contributions[_login] == 0) {
             project.contributors.push(_login);
         }
 
-        project.contributions[_login] += msg.value;
-        project.currentAmount += msg.value;
+        User storage user = users[_login];
+        user.balance -= int256(sum);
+        project.contributions[_login] += sum;
+        project.currentAmount += sum;
 
         if (project.currentAmount >= project.goalAmount) {
             project.isOpen = false;
         }
     }
 
-    function getUserBalance(string memory username) public view returns (uint256) {
-        address user = userAddresses[username];
-        require(user != address(0), "User does not exist.");
+    function getUserBalance(string memory username) public view returns (int256) {
+        User storage user = users[username];
+        require(user.passwordHash != 0, "User does not exist.");
         return user.balance;
     }
 
@@ -252,24 +253,19 @@ contract FundraisingContract {
             uint256 amount = project.contributions[contributor];
             if (amount > 0) {
                 project.contributions[contributor] = 0;
-                payable(users[contributor].userAddress).transfer(amount);
+                users[contributor].balance += int256(amount); // Update user's balance
             }
         }
     }
 
-    function changeDeadline(uint256 projectId, int256 additionalDays, string memory _login) public onlyProjectOwner(projectId) onlyLoggedIn(_login) {
+    function changeDeadline(uint256 projectId, uint256 newDeadline, string memory _login) public onlyProjectOwner(projectId) onlyLoggedIn(_login) {
         Project storage project = projects[projectId];
         require(project.isOpen, "Project is not open.");
 
-        if (additionalDays >= 0) {
-            project.deadline += uint256(additionalDays) * 1 days;
-        } else {
-            uint256 newDeadline = project.deadline - uint256(-additionalDays) * 1 days;
             if (newDeadline >= block.timestamp) {
                 project.isOpen = false;
             }
             project.deadline = newDeadline;
-        }
     }
 
     function getContribution(uint256 projectId, string memory _login) public view returns (uint256) {
@@ -353,7 +349,8 @@ contract FundraisingContract {
                     description: project.description,
                     goalAmount: project.goalAmount,
                     receivedAmount: project.currentAmount,
-                    deadline: project.deadline
+                    deadline: project.deadline,
+                    isOpen: project.isOpen
                 });
                 successfulIndex++;
             } else {
@@ -362,7 +359,8 @@ contract FundraisingContract {
                     description: project.description,
                     goalAmount: project.goalAmount,
                     receivedAmount: project.currentAmount,
-                    deadline: project.deadline
+                    deadline: project.deadline,
+                    isOpen: project.isOpen
                 });
                 failedIndex++;
             }

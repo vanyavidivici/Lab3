@@ -30,9 +30,7 @@ export class ProjectListItemComponent {
       this.fundraisingService.deleteProject(this.project.projectId).subscribe(
         () => {
           this.toastr.success('Project deleted successfully!');
-          
-          this.router.navigate(['']);
-          console.log('Navigated to home page');
+          window.location.reload();
         },
         (error) => {
           this.toastr.error('Failed to delete project.');
