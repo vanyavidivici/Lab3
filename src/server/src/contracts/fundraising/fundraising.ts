@@ -93,9 +93,9 @@ export async function getProject(projectId: number): Promise<Project> {
     }
 }
 
-export async function changeProject(projectId: number, name: string, description: string, goalAmount: number, durationInDays: number, isOpen: boolean, login: string): Promise<boolean> {
+export async function changeProject(projectId: number, name: string, description: string, goalAmount: number, newDeadline: number, isOpen: boolean, login: string): Promise<boolean> {
     try {
-        const result = await contract.methods.changeProject(projectId, name, description, goalAmount, durationInDays, isOpen, login).send({ from: fromAddress });
+        const result = await contract.methods.changeProject(projectId, name, description, goalAmount, newDeadline, isOpen, login).send({ from: fromAddress });
         return result;
     } catch (error) {
         console.error(error);

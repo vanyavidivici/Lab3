@@ -3,10 +3,9 @@ import { ChangeProjectRequest } from "../../models/request/change-project-reques
 
 export async function changeProjectHandler(model: ChangeProjectRequest, userName: string): Promise<boolean> {
     try {
-        const currentDate = new Date();
         const deadlineDate = new Date(model.deadline);
-        const daysDifference = Math.floor((deadlineDate.getTime() - currentDate.getTime()) / (1000 * 3600 * 24));
-        const contractResult = await changeProject(model.projectId, model.name, model.description, daysDifference, model.targetAmount, model.isOpen, userName);
+        const timestamp = Math.floor(deadlineDate.getTime() / 1000);
+        const contractResult = await changeProject(model.projectId, model.name, model.description, timestamp, model.targetAmount, model.isOpen, userName);
         return contractResult;
     }
     catch (error) {
