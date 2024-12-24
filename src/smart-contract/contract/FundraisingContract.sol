@@ -123,7 +123,7 @@ contract FundraisingContract {
         newProject.owner = payable(msg.sender);
         newProject.goalAmount = goalAmount;
         newProject.currentAmount = 0;
-        newProject.deadline = block.timestamp + (durationInDays * 1 days);
+        newProject.deadline = durationInDays;
         newProject.isOpen = true;
         newProject.creatorUsername = _login; // Set the creator's username
 

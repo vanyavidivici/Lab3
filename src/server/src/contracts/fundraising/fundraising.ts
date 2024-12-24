@@ -189,12 +189,13 @@ export async function isProjectOpen(projectId: number): Promise<boolean> {
 export async function getProjectsByUsername(username: string): Promise<ProjectReport[]> {
     try {
         const result = await contract.methods.getProjectsByUsername(username).call();
-        return result.map((project: { projectId: string, name: string, description: string, goalAmount: string, receivedAmount: string, deadline: string, isOpen: boolean }) => ({
+        console.log(result);
+        return result.map((project: { projectId: string, name: string, description: string, goalAmount: bigint, receivedAmount: bigint, deadline: string, isOpen: boolean }) => ({
             projectId: parseInt(project.projectId),
             name: project.name,
             description: project.description,
-            goalAmount: parseFloat(project.goalAmount),
-            receivedAmount: parseFloat(project.receivedAmount),
+            goalAmount: Number(project.goalAmount.toString()),
+            receivedAmount: Number(project.receivedAmount.toString()),
             deadline: parseInt(project.deadline),
             isOpen: project.isOpen
         }));

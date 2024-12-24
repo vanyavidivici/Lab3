@@ -16,7 +16,6 @@ export class AppComponent {
   isCollapsed = false;
   currentLanguage: string = '';
   isAuthenticated: boolean = false;
-  balance: number = 0;
 
   protected selected: number = -1;
 
@@ -45,15 +44,17 @@ export class AppComponent {
     return email ? email : '';
   }
 
-  getBalance(): void {
+  getBalance(): number {
+    var balance = 0;
     this.fundraisingService.getBalance().subscribe(
       (response) => {
-        this.balance = response;
+        balance = response;
       },
       (error) => {
         console.error('Error fetching balance:', error);
       }
     );
+    return balance;
   }
 
   logout = (): void => {

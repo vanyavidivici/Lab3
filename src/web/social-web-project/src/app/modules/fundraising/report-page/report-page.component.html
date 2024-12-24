@@ -1,1 +1,6 @@
-<p>report-page works!</p>
+<div class="all-projects-page">
+    <p>Successful projects</p>
+    <app-project-list-item *ngFor="let project of successfulProjects" [project]="project"></app-project-list-item>
+    <p>Unsuccessful projects</p>
+    <app-project-list-item *ngFor="let project of unsuccessfulProjects" [project]="project"></app-project-list-item>
+</div>
