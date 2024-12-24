@@ -35,7 +35,7 @@ export class FundraisingService {
    }
 
   changeProject(model: ChangeProjectRequest): Observable<boolean> {
-    return this.httpClient.post<boolean>(`${this.baseUrl}/change-project`, { model });
+    return this.httpClient.post<boolean>(`${this.baseUrl}/change-project`, model );
   }
 
   deleteProject(projectId: number): Observable<boolean> {

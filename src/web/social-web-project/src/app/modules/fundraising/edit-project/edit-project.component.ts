@@ -32,6 +32,7 @@ export class EditProjectComponent implements OnInit {
 
   ngOnInit(): void {
     this.projectId = this.route.snapshot.params['id'];
+    console.log('Project ID:', this.projectId);
     this.loadProject();
   }
 
@@ -39,6 +40,7 @@ export class EditProjectComponent implements OnInit {
     // Load the project details and populate the form
     this.fundraisingService.getProject(this.projectId).subscribe(
       (project) => {
+        console.log('Project details:', project);
         const deadlineDate = new Date(project.deadline * 1000); // Assuming deadline is in seconds
         this.projectForm.patchValue({
           name: project.name,
@@ -47,10 +49,11 @@ export class EditProjectComponent implements OnInit {
           targetAmount: project.goalAmount,
           isOpen: project.isOpen
         });
+        console.log('Form values after patch:', this.projectForm.value);
       },
       (error) => {
         this.toastr.error('Failed to load project details.');
-        console.error(error);
+        console.error('Error loading project details:', error);
       }
     );
   }
@@ -62,16 +65,20 @@ export class EditProjectComponent implements OnInit {
         ...this.projectForm.value,
         deadline: Math.floor(new Date(this.projectForm.value.deadline).getTime() / 1000) // Convert to seconds
       };
+      console.log('Submitting project:', project);
       this.fundraisingService.changeProject(project).subscribe(
         (response) => {
+          console.log('Project update response:', response);
           this.toastr.success('Project updated successfully!');
           this.router.navigate(['/my-projects']);
         },
         (error) => {
           this.toastr.error('Failed to update project.');
-          console.error(error);
+          console.error('Error updating project:', error);
         }
       );
+    } else {
+      console.log('Form is invalid:', this.projectForm.errors);
     }
   }
 }
