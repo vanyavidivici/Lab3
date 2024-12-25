@@ -51,7 +51,7 @@ export class FundraisingService {
   }
 
   refund(projectId: number): Observable<string> {
-    return this.httpClient.post<string>(`${this.baseUrl}/refund`, projectId);
+    return this.httpClient.post<string>(`${this.baseUrl}/refund`, { projectId });
   }
 
   changeDeadline(projectId: number, newDeadline: Date, userName: string): Observable<string> {

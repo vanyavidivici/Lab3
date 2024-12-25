@@ -222,7 +222,13 @@ contract FundraisingContract {
         project.description = description;
         project.goalAmount = goalAmount;
         project.deadline = deadline;
-        project.isOpen = isOpen;
+        
+        if (deadline <= block.timestamp) {
+            project.isOpen = false;
+        }
+        else {
+            project.isOpen = isOpen;
+        }
     }
 
     function deleteProject(uint256 projectId, string memory _login) public onlyLoggedIn(_login) onlyProjectOwner(projectId) {
@@ -261,10 +267,15 @@ contract FundraisingContract {
             string memory contributor = project.contributors[i];
             uint256 amount = project.contributions[contributor];
             if (amount > 0) {
-                project.contributions[contributor] = 0;
                 users[contributor].balance += int256(amount);
             }
         }
+        project.contributors = new string[](0);
+        project.currentAmount = 0;
+        for (uint256 i = 0; i < project.contributors.length; i++) {
+            delete project.contributions[project.contributors[i]];
+        }
+        project.contributors = new string[](0);
     }
 
     function changeDeadline(uint256 projectId, uint256 newDeadline, string memory _login) public onlyProjectOwner(projectId) onlyLoggedIn(_login) {
