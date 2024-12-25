@@ -215,6 +215,7 @@ contract FundraisingContract {
 
     function deleteProject(uint256 projectId, string memory _login) public onlyLoggedIn(_login) onlyProjectOwner(projectId) {
         delete projects[projectId];
+        projectCount--;
     }
 
     function contributeToProject(uint256 projectId, uint256 sum, string memory _login) public onlyLoggedIn(_login) {
@@ -231,10 +232,6 @@ contract FundraisingContract {
         user.balance -= int256(sum);
         project.contributions[_login] += sum;
         project.currentAmount += sum;
-
-        if (project.currentAmount >= project.goalAmount) {
-            project.isOpen = false;
-        }
     }
 
     function getUserBalance(string memory username) public view returns (int256) {

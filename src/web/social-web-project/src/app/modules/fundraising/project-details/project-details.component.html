@@ -3,7 +3,15 @@
     <mat-card-content>
       <p>{{ project.description }}</p>
       <p>Goal Amount: {{ project.goalAmount | currency }}</p>
-      <p>Deadline: {{ project.deadline | date }}</p>
+      <p>Deadline: {{ project.deadline * 1000 | date:'dd.MM.yyyy' }}</p>
       <p>Status: {{ project.isOpen ? 'Open' : 'Closed' }}</p>
+      <p>Contributors: {{ contributors.length }}</p>
+      <form (ngSubmit)="contribute()">
+        <mat-form-field appearance="fill">
+          <mat-label>Contribution Amount</mat-label>
+          <input matInput type="number" [(ngModel)]="contributionAmount" name="contributionAmount" min="0" [max]="balance" required>
+        </mat-form-field>
+        <button mat-raised-button color="primary" type="submit" [disabled]="!project.isOpen">Contribute</button>
+      </form>
     </mat-card-content>
   </mat-card>

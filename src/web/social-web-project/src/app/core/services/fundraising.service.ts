@@ -42,8 +42,8 @@ export class FundraisingService {
     return this.httpClient.post<boolean>(`${this.baseUrl}/delete-project/${projectId}`, { });
   }
 
-  contribute(model: ContributeRequest): Observable<BaseResponseModel<string>> {
-    return this.httpClient.post<BaseResponseModel<string>>(`${this.baseUrl}/contribute`, model);
+  contribute(model: ContributeRequest): Observable<number> {
+    return this.httpClient.post<number>(`${this.baseUrl}/contribute`, model);
   }
 
   getBalance(): Observable<number> {

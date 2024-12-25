@@ -11,15 +11,15 @@ import { Router } from '@angular/router';
 })
 export class MyProjectsPageComponent implements OnInit {
 
-  openProjects!: Observable<ProjectListItem[]>;
+  myProjects!: Observable<ProjectListItem[]>;
 
   constructor(private router: Router, private fundraisingService: FundraisingService) { }
 
   ngOnInit(): void {
-    this.openProjects = this.fundraisingService.getMyProjects().pipe(
+    this.myProjects = this.fundraisingService.getMyProjects().pipe(
       map(response => response as ProjectListItem[])
     );
-    console.log(this.openProjects);
+    console.log(this.myProjects);
   }
 
   navigateToAddProject(): void {

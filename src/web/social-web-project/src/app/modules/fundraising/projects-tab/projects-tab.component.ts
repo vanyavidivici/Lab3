@@ -12,12 +12,16 @@ import { FundraisingService } from '../../../core/services/fundraising.service';
 export class ProjectsTabComponent implements OnInit {
 
   openProjects!: Observable<ProjectListItem[]>;
+  myProjects!: Observable<ProjectListItem[]>;
   activeTabIndex: number = 0;
 
   constructor(private fundraisingService: FundraisingService) { }
 
   ngOnInit(): void {
     this.openProjects = this.fundraisingService.getOpenProjects().pipe(
+      map(response => response as ProjectListItem[])
+    );
+    this.myProjects = this.fundraisingService.getMyProjects().pipe(
       map(response => response as ProjectListItem[])
     );
     const savedTabIndex = localStorage.getItem('activeTabIndex');

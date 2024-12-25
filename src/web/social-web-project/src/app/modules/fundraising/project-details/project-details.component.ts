@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FundraisingService } from '../../../core/services/fundraising.service';
 import { Project } from '../../../core/models/response/project-response.model';
 import { ToastrService } from 'ngx-toastr';
+import { ContributeRequest } from 'src/app/core/models/request/contribute-request.model';
 
 @Component({
   selector: 'app-project-details',
@@ -11,11 +12,15 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class ProjectDetailsComponent implements OnInit {
   project!: Project;
+  contributors: string[] = [];
+  balance: number = 0;
+  contributionAmount: number = 0;
 
   constructor(
     private route: ActivatedRoute,
     private fundraisingService: FundraisingService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -26,6 +31,7 @@ export class ProjectDetailsComponent implements OnInit {
   loadProject(projectId: number): void {
     this.fundraisingService.getProject(projectId).subscribe(
       (project) => {
+        console.log(project);
         this.project = project;
       },
       (error) => {
@@ -33,5 +39,46 @@ export class ProjectDetailsComponent implements OnInit {
         console.error(error);
       }
     );
+
+    this.fundraisingService.getContributors(projectId).subscribe(
+      (contributors) => {
+        this.contributors = contributors;
+      },
+      (error) => {
+        this.toastr.error('Failed to load contributors.');
+        console.error(error);
+      }
+    );
+
+    this.fundraisingService.getBalance().subscribe(
+      (balance) => {
+        this.balance = balance;
+        localStorage.setItem('balance', balance.toString());
+      },
+      (error) => {
+        this.toastr.error('Failed to load balance.');
+        console.error(error);
+      }
+    );
+  }
+
+  contribute(): void {
+    if (this.contributionAmount > 0 && this.contributionAmount <= this.balance) {
+      var contributeRequest: ContributeRequest = {
+        projectId: this.project.projectId,
+        amount: this.contributionAmount
+      };
+      this.fundraisingService.contribute(contributeRequest).subscribe(
+        (response) => {
+          localStorage.setItem('balance', response.toString());
+          this.toastr.success('Contribution successful!');
+          this.router.navigate(['/my-projects']);
+        },
+        (error) => {
+          this.toastr.error('Failed to contribute to the project.');
+          console.error(error);
+        }
+      );
+    }
   }
 }
