@@ -26,6 +26,13 @@ export class AppComponent {
     this.isUserAuthenticated();
   }
 
+  ngOnInit(): void {
+    this.isUserAuthenticated();
+    if (this.isAuthenticated) {
+      this.getBalance();
+    }
+  }
+
   isUserAuthenticated(): boolean {
     const accessToken = localStorage.getItem('access_token');
 
