@@ -62,19 +62,19 @@ export class EditProjectComponent implements OnInit {
     if (this.projectForm.valid) {
       const project: ChangeProjectRequest = {
         projectId: this.projectId,
-        ...this.projectForm.value,
-        deadline: Math.floor(new Date(this.projectForm.value.deadline).getTime() / 1000) // Convert to seconds
+        ...this.projectForm.value
       };
-      console.log('Submitting project:', project);
       this.fundraisingService.changeProject(project).subscribe(
         (response) => {
           console.log('Project update response:', response);
           this.toastr.success('Project updated successfully!');
-          this.router.navigate(['/my-projects']);
         },
         (error) => {
           this.toastr.error('Failed to update project.');
           console.error('Error updating project:', error);
+        },
+        () => {
+          this.router.navigate(['/my-projects']);
         }
       );
     } else {

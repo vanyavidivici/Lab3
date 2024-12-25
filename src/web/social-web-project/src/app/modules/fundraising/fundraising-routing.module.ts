@@ -9,6 +9,7 @@ const routes: Routes = [
   { path: 'add-project', component: AddProjectComponent },
   { path: 'edit-project/:id', component: EditProjectComponent },
   { path: 'project-details/:id', component: ProjectDetailsComponent },
+  { path: 'my-projects', redirectTo: '/?tab=my-projects' },
   { path: '', component: ProjectsTabComponent },
   { path: '**', redirectTo: '' }
 ];
