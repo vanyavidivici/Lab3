@@ -241,12 +241,13 @@ contract FundraisingContract {
         require(project.isOpen, "Project is not open for contributions.");
         require(block.timestamp <= project.deadline, "Project deadline has passed.");
         require(sum > 0, "Contribution must be greater than zero.");
+        User storage user = users[_login];
+        require(user.balance >= int256(sum), "Insufficient balance.");
 
         if (project.contributions[_login] == 0) {
             project.contributors.push(_login);
         }
 
-        User storage user = users[_login];
         user.balance -= int256(sum);
         project.contributions[_login] += sum;
         project.currentAmount += sum;
