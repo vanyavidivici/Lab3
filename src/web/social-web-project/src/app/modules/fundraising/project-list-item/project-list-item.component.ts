@@ -14,28 +14,9 @@ export class ProjectListItemComponent {
 
   constructor(
     private router: Router,
-    private fundraisingService: FundraisingService,
-    private toastr: ToastrService
   ) { }
 
   viewProjectDetails(): void {
     this.router.navigate(['/project-details', this.project.projectId]);
   }
-
-  editProject(): void {
-    this.router.navigate(['/edit-project', this.project.projectId]);
-  }
-
-  deleteProject(): void {
-      this.fundraisingService.deleteProject(this.project.projectId).subscribe(
-        () => {
-          this.toastr.success('Project deleted successfully!');
-          window.location.reload();
-        },
-        (error) => {
-          this.toastr.error('Failed to delete project.');
-          console.error(error);
-        }
-      );
-    }
 }

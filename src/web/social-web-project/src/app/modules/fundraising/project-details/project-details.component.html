@@ -12,6 +12,7 @@
           <input matInput type="number" [(ngModel)]="contributionAmount" name="contributionAmount" min="0" [max]="balance" required>
         </mat-form-field>
         <button mat-raised-button color="primary" type="submit" [disabled]="!project.isOpen">Contribute</button>
+        <button mat-raised-button color="warn" (click)="refund()">Request Refund</button>
       </form>
     </mat-card-content>
   </mat-card>

@@ -1,5 +1,5 @@
 <div class="my-projects-page">
-    <app-project-list-item *ngFor="let project of myProjects | async" [project]="project"></app-project-list-item>
+    <app-my-project-list-item *ngFor="let project of myProjects | async" [project]="project"></app-my-project-list-item>
     <button mat-fab color="primary" class="create-project-button" (click)="navigateToAddProject()">
       <mat-icon>add</mat-icon>
     </button>

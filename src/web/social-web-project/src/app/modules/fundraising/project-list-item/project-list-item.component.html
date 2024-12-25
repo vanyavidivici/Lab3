@@ -5,6 +5,4 @@
   <p>Received Amount: {{ project.receivedAmount | currency }}</p>
   <p>Deadline: {{ project.deadline * 1000 | date:'dd.MM.yyyy' }}</p> <!-- Multiply by 1000 to convert seconds to milliseconds -->
   <p>Status: {{ project.isOpen ? 'Open' : 'Closed' }}</p>
-  <button mat-button color="primary" (click)="editProject()">Edit</button>
-  <button mat-button color="warn" (click)="deleteProject()">Delete</button>
 </div>

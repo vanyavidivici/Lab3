@@ -81,4 +81,19 @@ export class ProjectDetailsComponent implements OnInit {
       );
     }
   }
+
+  refund(): void {
+    if (confirm('Are you sure you want to request a refund?')) {
+      this.fundraisingService.refund(this.project.projectId).subscribe(
+        (response) => {
+          this.toastr.success('Refund successful!');
+          this.router.navigate(['/my-projects']);
+        },
+        (error) => {
+          this.toastr.error('Failed to process refund.');
+          console.error(error);
+        }
+      );
+    }
+  }
 }

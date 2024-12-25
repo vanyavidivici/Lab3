@@ -62,8 +62,7 @@ export class EditProjectComponent implements OnInit {
     if (this.projectForm.valid) {
       const project: ChangeProjectRequest = {
         projectId: this.projectId,
-        ...this.projectForm.value,
-        deadline: Math.floor(new Date(this.projectForm.value.deadline).getTime() / 1000) // Convert to seconds
+        ...this.projectForm.value
       };
       console.log('Submitting project:', project);
       this.fundraisingService.changeProject(project).subscribe(
