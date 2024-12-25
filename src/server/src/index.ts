@@ -6,7 +6,6 @@ import fundraising from "./routers/fundraising.routes";
 import report from "./routers/report.routes";
 import cors from "cors";
 import { buildClient } from "./contracts/fundraising/fundraising";
-import fileUpload from 'express-fileupload';
 
 
 dotenv.config();
@@ -21,7 +20,6 @@ buildClient().then(() => {
 
 app.use(cors())
 app.use(bodyParser.json());
-app.use(fileUpload());
 app.use(express.urlencoded({extended: true}));
 
 
