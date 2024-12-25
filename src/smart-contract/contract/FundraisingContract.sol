@@ -20,7 +20,7 @@ contract FundraisingContract {
         bool isOpen;
         string[] contributors;
         mapping(string => uint256) contributions;
-        string creatorUsername; // Add the username of the creator
+        string creatorUsername;
     }
 
     struct ProjectInfo {
@@ -103,6 +103,18 @@ contract FundraisingContract {
         user.isLoggedIn = false;
     }
 
+    function getUser(string memory username) public view returns (string memory, address, int256, bool) {
+        User storage user = users[username];
+        require(user.passwordHash != 0, "User does not exist.");
+        return (user.login, user.userAddress, user.balance, user.isLoggedIn);
+    }
+
+    function getUserAddress(string memory username) public view returns (address) {
+        User storage user = users[username];
+        require(user.passwordHash != 0, "User does not exist.");
+        return user.userAddress;
+    }
+
     function createProject(
         string memory name,
         string memory description,
@@ -124,7 +136,7 @@ contract FundraisingContract {
         newProject.currentAmount = 0;
         newProject.deadline = durationInDays;
         newProject.isOpen = true;
-        newProject.creatorUsername = _login; // Set the creator's username
+        newProject.creatorUsername = _login;
 
         emit ProjectCreated(projectCount, name, description, goalAmount, newProject.deadline, msg.sender);
 
@@ -250,7 +262,7 @@ contract FundraisingContract {
             uint256 amount = project.contributions[contributor];
             if (amount > 0) {
                 project.contributions[contributor] = 0;
-                users[contributor].balance += int256(amount); // Update user's balance
+                users[contributor].balance += int256(amount);
             }
         }
     }

@@ -41,9 +41,11 @@ export class AddProjectComponent implements OnInit {
         (error) => {
           this.toastr.error('Failed to create project.');
           console.error(error);
+        },
+        () => {
+          this.router.navigate(['/my-projects']);
         }
       );
-      this.router.navigate(['']);
     }
   }
 }

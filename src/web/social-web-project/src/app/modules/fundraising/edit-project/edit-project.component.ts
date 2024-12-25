@@ -64,16 +64,17 @@ export class EditProjectComponent implements OnInit {
         projectId: this.projectId,
         ...this.projectForm.value
       };
-      console.log('Submitting project:', project);
       this.fundraisingService.changeProject(project).subscribe(
         (response) => {
           console.log('Project update response:', response);
           this.toastr.success('Project updated successfully!');
-          this.router.navigate(['/my-projects']);
         },
         (error) => {
           this.toastr.error('Failed to update project.');
           console.error('Error updating project:', error);
+        },
+        () => {
+          this.router.navigate(['/my-projects']);
         }
       );
     } else {
