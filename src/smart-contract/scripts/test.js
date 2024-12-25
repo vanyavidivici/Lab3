@@ -34,6 +34,12 @@ describe('FundraisingContract', function () {
         expect(userAddress2).to.equal(accounts[1]);
     });
 
+    it('should get user balance', async () => {
+        const balance = await fundraisingContract.methods.getUserBalance("testUser1").call();
+
+        expect(balance.toString()).to.equal('100');
+    });
+
     it('should allow users to login', async () => {
         await fundraisingContract.methods.loginUser("testUser1", "testPassword1").send({ from: accounts[0] });
         await fundraisingContract.methods.loginUser("testUser2", "testPassword2").send({ from: accounts[1] });
@@ -41,24 +47,49 @@ describe('FundraisingContract', function () {
         const user1 = await fundraisingContract.methods.getUser("testUser1").call();
         const user2 = await fundraisingContract.methods.getUser("testUser2").call();
 
-        expect(user1.isLoggedIn).to.be.true;
-        expect(user2.isLoggedIn).to.be.true;
+        expect(user1[3]).to.be.true;
+        expect(user2[3]).to.be.true;
     });
 
     it('should create a project', async () => {
-        await fundraisingContract.methods.createProject("Project1", "Description1", 10, 5, "testUser1").send({ from: accounts[0] });
+        const timestamp = Math.floor(Date.now() / 1000 + 60 * 60);
+        await fundraisingContract.methods.createProject("Project1", "Description1", 10, timestamp, "testUser1").send({ from: accounts[0] });
         const project = await fundraisingContract.methods.getProject(1).call();
 
         expect(project.name).to.equal("Project1");
-        expect(project.goalAmount.toString()).to.equal(web3.utils.toWei('10', 'ether'));
+        expect(project.goalAmount.toString()).to.equal('10');
         expect(project.owner).to.equal(accounts[0]);
     });
 
-    it('should allow contributions to a project', async () => {
-        await fundraisingContract.methods.contributeToProject(1, "testUser2").send({ from: accounts[1], value: web3.utils.toWei('5', 'ether') });
+    it('should update a project', async () => {
+        const timestamp = Math.floor(Date.now() / 1000 + 60 * 60 * 24);
+        await fundraisingContract.methods.changeProject(1, "Updated Project", "Updated Description", 20, timestamp, true, "testUser1").send({ from: accounts[0] });
         const project = await fundraisingContract.methods.getProject(1).call();
 
-        expect(project.currentAmount.toString()).to.equal(web3.utils.toWei('5', 'ether'));
+        expect(project.name).to.equal("Updated Project");
+        expect(project.description).to.equal("Updated Description");
+        expect(project.goalAmount.toString()).to.equal('20');
+        expect(project.deadline.toString()).to.equal(timestamp.toString());
+    });
+
+    it('should allow contributions to a project', async () => {
+        await fundraisingContract.methods.contributeToProject(1, 5, "testUser2").send({ from: accounts[1] });
+        const project = await fundraisingContract.methods.getProject(1).call();
+
+        expect(project.currentAmount.toString()).to.equal('5');
+    });
+
+    it('should get user contributions', async () => {
+        const contribution = await fundraisingContract.methods.getContribution(1, "testUser2").call();
+        expect(contribution.toString()).to.equal('5');
+    });
+
+    it('should get all contributions to a project', async () => {
+        const contributions = await fundraisingContract.methods.getContributors(1).call();
+        expect(contributions).to.be.an('array');
+        expect(contributions.length).to.be.above(0);
+        expect(contributions[0].username).to.equal('testUser2');
+        expect(contributions[0].sum.toString()).to.equal('5');
     });
 
     it('should generate a project report', async () => {
@@ -67,23 +98,17 @@ describe('FundraisingContract', function () {
         expect(report.failedProjects).to.be.an('array');
     });
 
-    it('should get user balance', async () => {
-        const balance = await fundraisingContract.methods.getUserBalance("testUser1").call();
-        const expectedBalance = await web3.eth.getBalance(accounts[0]);
-
-        expect(balance.toString()).to.equal(expectedBalance.toString());
-    });
-
     it('should check if project is open', async () => {
         const isOpen = await fundraisingContract.methods.isProjectOpen(1).call();
         expect(isOpen).to.be.true;
     });
 
     it('should change the project deadline', async () => {
-        await fundraisingContract.methods.changeDeadline(1, -6, "testUser1").send({ from: accounts[0] });
+        const timestamp = Math.floor(Date.now() / 1000 - 60 * 60);
+        await fundraisingContract.methods.changeDeadline(1, timestamp, "testUser1").send({ from: accounts[0] });
         project = await fundraisingContract.methods.getProject(1).call();
 
-        expect(parseInt(project.deadline)).to.be.below(Math.floor(Date.now() / 1000));
+        expect(parseInt(project.deadline)).to.be.equal(timestamp);
     });
 
     it('should refund all contributors if the project fails', async () => {
@@ -99,6 +124,6 @@ describe('FundraisingContract', function () {
         await fundraisingContract.methods.logoutUser("testUser1").send({ from: accounts[0] });
         const user1 = await fundraisingContract.methods.getUser("testUser1").call();
 
-        expect(user1.isLoggedIn).to.be.false;
+        expect(user1[3]).to.be.false;
     });
 });
