@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ContributeRequest } from '../models/contribute-request.model';
-import { BaseResponseModel } from '../models/base-response';
 import { ChangeProjectRequest } from '../models/request/change-project-request.model';
 import { Project } from '../models/response/project-response.model';
 import { ProjectReport } from '../models/response/projects-report-response.model';
