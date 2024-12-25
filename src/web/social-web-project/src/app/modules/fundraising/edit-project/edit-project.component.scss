@@ -1,9 +1,19 @@
 .edit-project-card {
-    max-width: 600px;
-    margin: 20px auto;
-    padding: 20px;
-  }
-  
-  .full-width {
-    width: 100%;
-  }
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+mat-checkbox {
+  margin-left: 8px;
+}
