@@ -15,6 +15,7 @@ export class ProjectDetailsComponent implements OnInit {
   contributors: string[] = [];
   balance: number = 0;
   contributionAmount: number = 0;
+  today: number = Date.now();
 
   constructor(
     private route: ActivatedRoute,
@@ -87,13 +88,11 @@ export class ProjectDetailsComponent implements OnInit {
       this.fundraisingService.refund(this.project.projectId).subscribe(
         (response) => {
           this.toastr.success('Refund successful!');
+          this.router.navigate(['/my-projects']);
         },
         (error) => {
           this.toastr.error('Failed to process refund.');
           console.error(error);
-        },
-        () => {
-          this.router.navigate(['/my-projects']);
         }
       );
     }

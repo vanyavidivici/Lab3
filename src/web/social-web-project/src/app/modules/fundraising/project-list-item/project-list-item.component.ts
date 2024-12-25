@@ -1,8 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { ProjectListItem } from '../models/project-list-item.model';
-import { FundraisingService } from '../../../core/services/fundraising.service';
-import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-project-list-item',

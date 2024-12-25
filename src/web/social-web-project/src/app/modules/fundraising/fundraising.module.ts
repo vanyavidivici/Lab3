@@ -22,6 +22,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MyProjectListItemComponent } from './my-project-list-item/my-project-list-item.component';
+import { ReportProjectListItemComponent } from './report-project-list-item/report-project-list-item.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { MyProjectListItemComponent } from './my-project-list-item/my-project-li
     ReportPageComponent,
     ProjectsTabComponent,
     ProjectListItemComponent,
-    MyProjectListItemComponent
+    MyProjectListItemComponent,
+    ReportProjectListItemComponent
   ],
   imports: [
     CommonModule,

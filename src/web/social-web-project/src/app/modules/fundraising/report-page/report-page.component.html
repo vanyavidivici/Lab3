@@ -1,10 +1,14 @@
-<div class="all-projects-page">
-    <div *ngIf="successfulProjects.length != 0">
-        <p>Successful projects</p>
-        <app-project-list-item *ngFor="let project of successfulProjects" [project]="project"></app-project-list-item>
+<div class="report-page">
+    <div *ngIf="successfulProjects.length != 0" class="projects-section">
+      <h2>Successful Projects</h2>
+      <div class="projects-list">
+        <app-report-project-list-item *ngFor="let project of successfulProjects" [project]="project"></app-report-project-list-item>
+      </div>
     </div>
-    <div *ngIf="unsuccessfulProjects.length != 0">
-        <p>Unsuccessful projects</p>
-        <app-project-list-item *ngFor="let project of unsuccessfulProjects" [project]="project"></app-project-list-item>
+    <div *ngIf="unsuccessfulProjects.length != 0" class="projects-section">
+      <h2>Unsuccessful Projects</h2>
+      <div class="projects-list">
+        <app-report-project-list-item *ngFor="let project of unsuccessfulProjects" [project]="project"></app-report-project-list-item>
+      </div>
     </div>
-</div>
+  </div>
